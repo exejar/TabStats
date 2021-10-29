@@ -27,6 +27,10 @@ public class Bedwars extends BedwarsUtil {
 
         if (setData(HypixelGames.BEDWARS)) {
             this.statList = setStats(
+                    // "bedwars_level" is the Api name of the star.
+                    // If you wish to add any other stats, you add them like this, statName is whatever name you want to call it, then jsonName is the name of the stat in the API
+                    // and the 3rd parameter is the json object in which this api stat resides. So winstreak is inside of the bedwars json object along with all the other bedwars
+                    // statistics. For some reason, bedwars level is inside of your achievements?? idk why
                     this.star = new StatInt("Level", "bedwars_level", this.achievementObj),
                     this.winstreak = new StatInt("Winstreak", "winstreak", this.bedwarsJson),
                     this.gamesPlayed = new StatInt("Games Played", "games_played_bedwars", this.bedwarsJson),

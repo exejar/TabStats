@@ -11,9 +11,8 @@ import java.util.List;
 /* Hypixel Player */
 public class HPlayer {
     private HashMap<String, HGameBase> gameMap;
-    private String playerUUID, playerName, nickName, playerRank, playerTag = "-";
+    private String playerUUID, playerName, nickName, playerRank;
     private boolean nicked;
-    private int playerTagColor = -7895161;
 
     /**
      * @param playerUUID Player's UUID
@@ -79,10 +78,6 @@ public class HPlayer {
     public List<Stat> getFormattedGameStats(String gameName) {
         return this.gameMap.get(gameName).getFormattedStatList();
     }
-
-    public String getPlayerTag() { return this.playerTag; }
-
-    public int getPlayerTagColor() { return this.playerTagColor; }
 
     public void setNicked(boolean nicked) { this.nicked = nicked; }
 

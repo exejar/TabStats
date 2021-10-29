@@ -13,6 +13,9 @@ public abstract class BedwarsUtil extends HGameBase {
         return this.formatDouble(((StatInt)bw.finalKills).getValue(), ((StatInt)bw.finalDeaths).getValue());
     }
 
+    //this is where I format all the stats and stat colors. You can modify this to your liking
+    // Bedwars class is how I handle all the stats that are grabbed, you can also modify which stats are grabbed and add them to the stat list
+
     public ChatColor getFkdrColor(double fkdr) {
         if (fkdr < 5) {
             return ChatColor.GRAY;

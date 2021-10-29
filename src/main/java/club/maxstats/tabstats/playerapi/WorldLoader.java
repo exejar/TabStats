@@ -19,7 +19,7 @@ public class WorldLoader extends StatWorld {
 
     /* populates and checks the stat world player cache every tick */
     @SubscribeEvent
-    public void onTick(TickEvent.WorldTickEvent event) {
+    public void onTick(TickEvent event) {
         if (mc.theWorld != null && mc.thePlayer != null) {
             for (EntityPlayer entityPlayer : mc.theWorld.playerEntities) {
                 if (!existedMoreThan5Seconds.contains(entityPlayer.getUniqueID())) {

@@ -1,5 +1,7 @@
 package club.maxstats.tabstats;
 
+import club.maxstats.tabstats.config.ModConfig;
+import club.maxstats.tabstats.listener.GameOverlayListener;
 import club.maxstats.tabstats.playerapi.WorldLoader;
 import club.maxstats.tabstats.util.References;
 import net.minecraft.command.ICommand;
@@ -21,14 +23,14 @@ public class TabStats {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         tabStats = this;
-        this.statWorld = new WorldLoader();
-        this.registerListeners(statWorld);
+        ModConfig.getInstance().init();
     }
 
     /* Initialization Event, Called during the initialization of Forge */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
+        this.statWorld = new WorldLoader();
+        this.registerListeners(statWorld, new GameOverlayListener());
     }
 
     /* Post Initialization Event, Called after the initialization of Forge */

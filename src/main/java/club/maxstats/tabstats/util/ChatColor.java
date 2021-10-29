@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ChatColor {
+    // code is for vanilla minecraft string drawing, rgb is for rendering any other way
     BLACK('0', -16777216),
     DARK_BLUE('1', -16777046),
     DARK_GREEN('2', -16733696),
