@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = modVersion
+group = modGroup
+archivesBaseName = modBaseName
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+    version = project.forgeVersion
+    runDir = "run"
+    mappings = project.mcpVersion
+}
+
+dependencies {
+    implementation group: 'com.google.code.gson', name: 'gson', version:'2.7'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+}
+
+processResources {
+    inputs.property "version", modVersion
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": modVersion, "mcversion": project.minecraft.version, "modid": modBaseName, "name": modName, "description": modDescription, "url": modURL, "updateUrl": updateUrl
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}
+
+shadowJar {
+    exclude 'GradleStart**'
+    exclude '.cache'
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+build {
+    clean
+    build
+    shadowJar
+}
+
+runClient {
+}
