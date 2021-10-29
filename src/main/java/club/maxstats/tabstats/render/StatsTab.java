@@ -2,6 +2,8 @@ package club.maxstats.tabstats.render;
 
 import club.maxstats.tabstats.TabStats;
 import club.maxstats.tabstats.playerapi.HPlayer;
+import club.maxstats.tabstats.playerapi.api.games.bedwars.Bedwars;
+import club.maxstats.tabstats.playerapi.api.stats.StatInt;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
@@ -87,7 +89,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
         int i1 = Math.min(j4 * ((flag ? 9 : 0) + i + l + 13), width - 50) / j4;
         int j1 = width / 2 - (i1 * j4 + (j4 - 1) * 5) / 2;
-        int k1 = 10;
+        int ySpacer = 10;
         int l1 = i1 * j4 + (j4 - 1) * 5;
         List<String> headerElements = null;
         List<String> footerElements = null;
@@ -111,24 +113,24 @@ public class StatsTab extends GuiPlayerTabOverlay {
         }
 
         if (headerElements != null) {
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + headerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
+            drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + headerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
 
             for (String s3 : headerElements) {
                 int i2 = this.mc.fontRendererObj.getStringWidth(s3);
-                this.mc.fontRendererObj.drawStringWithShadow(s3, (float)(width / 2 - i2 / 2), (float)k1, -1);
-                k1 += this.mc.fontRendererObj.FONT_HEIGHT;
+                this.mc.fontRendererObj.drawStringWithShadow(s3, (float)(width / 2 - i2 / 2), (float)ySpacer, -1);
+                ySpacer += this.mc.fontRendererObj.FONT_HEIGHT;
             }
 
-            ++k1;
+            ++ySpacer;
         }
 
-        drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + i4 * 9, Integer.MIN_VALUE);
+        drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + i4 * 9, Integer.MIN_VALUE);
 
         for (int k4 = 0; k4 < l3; ++k4) {
             int l4 = k4 / i4;
             int i5 = k4 % i4;
             int j2 = j1 + l4 * i1 + l4 * 5;
-            int k2 = k1 + i5 * 9;
+            int k2 = ySpacer + i5 * 9;
             drawRect(j2, k2, j2 + i1, k2 + 8, 553648127);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
@@ -163,14 +165,15 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     /* spectators */
                     playerName = EnumChatFormatting.ITALIC + playerName;
                     this.mc.fontRendererObj.drawStringWithShadow(playerName, (float)j2, (float)k2, -1862270977);
-                } else {
+                } else if (!playerName.contains("NPC")) /* avoid rendering npcs */ {
                     /* everybody else */
                     if (hPlayer != null) {
+                        Bedwars bw = (Bedwars)hPlayer.getGame("BEDWARS");
                         playerName = hPlayer.getPlayerRank() + hPlayer.getPlayerRankColor() + hPlayer.getPlayerName();
+                        this.mc.fontRendererObj.drawStringWithShadow(bw.getStarColor(((StatInt)bw.star).getValue()).toString() + ((StatInt)bw.star).getValue() + "✫", j2 + 125, k2, -1);
                     }
 
                     this.mc.fontRendererObj.drawStringWithShadow(playerName, (float)j2, (float)k2, -1);
-                    this.mc.fontRendererObj.drawStringWithShadow("shitfuck", j2 + this.mc.fontRendererObj.getStringWidth(playerName) + 3, k2, -1);
                 }
 
                 if (scoreObjectiveIn != null && playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
@@ -187,13 +190,13 @@ public class StatsTab extends GuiPlayerTabOverlay {
         }
 
         if (footerElements != null) {
-            k1 = k1 + i4 * 9 + 1;
-            drawRect(width / 2 - l1 / 2 - 1, k1 - 1, width / 2 + l1 / 2 + 1, k1 + footerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
+            ySpacer = ySpacer + i4 * 9 + 1;
+            drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + footerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
 
             for (String element : footerElements) {
                 int j5 = this.mc.fontRendererObj.getStringWidth(element);
-                this.mc.fontRendererObj.drawStringWithShadow(element, (float)(width / 2 - j5 / 2), (float)k1, -1);
-                k1 += this.mc.fontRendererObj.FONT_HEIGHT;
+                this.mc.fontRendererObj.drawStringWithShadow(element, (float)(width / 2 - j5 / 2), (float)ySpacer, -1);
+                ySpacer += this.mc.fontRendererObj.FONT_HEIGHT;
             }
         }
     }
