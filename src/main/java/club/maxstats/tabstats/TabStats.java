@@ -1,5 +1,6 @@
 package club.maxstats.tabstats;
 
+import club.maxstats.tabstats.playerapi.WorldLoader;
 import club.maxstats.tabstats.util.References;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -12,12 +13,16 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import java.util.Arrays;
 
 @Mod(modid = References.MODID, name = References.MODNAME, clientSideOnly = true, version = References.VERSION, acceptedMinecraftVersions = "1.8.9")
-public class Main {
+public class TabStats {
+    private static TabStats tabStats;
+    private WorldLoader statWorld;
 
     /* Pre Initialization Event, Called before the initialization of Forge */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
+        tabStats = this;
+        this.statWorld = new WorldLoader();
+        this.registerListeners(statWorld);
     }
 
     /* Initialization Event, Called during the initialization of Forge */
@@ -27,6 +32,7 @@ public class Main {
     }
 
     /* Post Initialization Event, Called after the initialization of Forge */
+    @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
 
     }
@@ -40,4 +46,9 @@ public class Main {
         Arrays.stream(commands).forEachOrdered(ClientCommandHandler.instance::registerCommand);
     }
 
+    public static TabStats getTabStats() { return tabStats; }
+
+    public WorldLoader getStatWorld() { return statWorld; }
 }
+
+//
