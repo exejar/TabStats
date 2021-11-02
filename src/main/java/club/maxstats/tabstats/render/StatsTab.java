@@ -49,30 +49,26 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
     @Override
     public void renderPlayerlist(int width, Scoreboard scoreboardIn, ScoreObjective scoreObjectiveIn) {
-        NetHandlerPlayClient nethandlerplayclient = this.mc.thePlayer.sendQueue;
-        List<NetworkPlayerInfo> playerList = field_175252_a.<NetworkPlayerInfo>sortedCopy(nethandlerplayclient.getPlayerInfoMap());
-        int i = 0;
-        int j = 0;
+        NetHandlerPlayClient nethandler = this.mc.thePlayer.sendQueue;
+        List<NetworkPlayerInfo> playerList = field_175252_a.sortedCopy(nethandler.getPlayerInfoMap());
+        /* width of the player's name */
+        int nameWidth = 0;
+        /* width of the player's objective string */
+        int objectiveWidth = 0;
 
-        for (NetworkPlayerInfo networkplayerinfo : playerList) {
-            int k = this.mc.fontRendererObj.getStringWidth(this.getPlayerName(networkplayerinfo));
-            i = Math.max(i, k);
+        for (NetworkPlayerInfo playerInfo : playerList) {
+            int strWidth = this.mc.fontRendererObj.getStringWidth(this.getPlayerName(playerInfo));
+            nameWidth = Math.max(nameWidth, strWidth);
 
             if (scoreObjectiveIn != null && scoreObjectiveIn.getRenderType() != IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-                k = this.mc.fontRendererObj.getStringWidth(" " + scoreboardIn.getValueFromObjective(networkplayerinfo.getGameProfile().getName(), scoreObjectiveIn).getScorePoints());
-                j = Math.max(j, k);
+                strWidth = this.mc.fontRendererObj.getStringWidth(" " + scoreboardIn.getValueFromObjective(playerInfo.getGameProfile().getName(), scoreObjectiveIn).getScoreScoreboard());
+                objectiveWidth = Math.max(objectiveWidth, strWidth);
             }
         }
 
+        /* only grabs downwards of 80 players */
         playerList = playerList.subList(0, Math.min(playerList.size(), 80));
-        int l3 = playerList.size();
-        int i4 = l3;
-        int j4;
-
-        /* im assuming this is finding out the width? */
-        for (j4 = 1; i4 > 20; i4 = (l3 + j4 - 1) / j4) {
-            ++j4;
-        }
+        int playerListSize = playerList.size();
 
         boolean flag = this.mc.isIntegratedServerRunning() || this.mc.getNetHandler().getNetworkManager().getIsencrypted();
         int l;
@@ -81,123 +77,70 @@ public class StatsTab extends GuiPlayerTabOverlay {
             if (scoreObjectiveIn.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
                 l = 90;
             } else {
-                l = j;
+                l = objectiveWidth;
             }
         } else {
             l = 0;
         }
 
-        int i1 = Math.min(j4 * ((flag ? 9 : 0) + i + l + 13), width - 50) / j4;
-        int j1 = width / 2 - (i1 * j4 + (j4 - 1) * 5) / 2;
-        int ySpacer = 10;
-        int l1 = i1 * j4 + (j4 - 1) * 5;
-        List<String> headerElements = null;
-        List<String> footerElements = null;
+        /* weird ass flags that I don't understand currently and don't care about bc i'll probably remove them.. GG */
+        int i1 = Math.min(playerListSize * ((flag ? 9 : 0) + nameWidth + l + 13), width - 50) / playerListSize;
+        int l1 = i1 * playerListSize + (playerListSize - 1) * 5;
 
-        if (this.header != null) {
-            headerElements = this.mc.fontRendererObj.listFormattedStringToWidth(this.header.getFormattedText(), width - 50);
+        /* the entire tab background */
+        drawRect(width / 2 - l1 / 2 - 1, 10 - 1, width / 2 + l1 / 2 + 1, 10 + playerListSize * 9, Integer.MIN_VALUE);
+        this.mc.fontRendererObj.drawStringWithShadow("Name           STAR    WS   FKDR    FINALS     WLR     WINS     BBLR", 0, 40, 0xFFFFFF);
+        /* should not be like this ^
+        should be like this
+        this.mc.fontRendererObj.drawStringWithShadow("Name", nameX, sameY, color);
+        this.mc.fontRendererObj.drawStringWithShadow("Star", starX, sameY, color);
+        etc...
+        And use the corresponding label X's with the stats drawn in the for loop to match the same position */
 
-            /* loops through all the header elements */
-            for (String element : headerElements) {
-                l1 = Math.max(l1, this.mc.fontRendererObj.getStringWidth(element));
-            }
-        }
-
-        if (this.footer != null) {
-            footerElements = this.mc.fontRendererObj.listFormattedStringToWidth(this.footer.getFormattedText(), width - 50);
-
-            /* loops through all the footer elements */
-            for (String element : footerElements) {
-                l1 = Math.max(l1, this.mc.fontRendererObj.getStringWidth(element));
-            }
-        }
-
-        if (headerElements != null) {
-            drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + headerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
-
-            for (String s3 : headerElements) {
-                int i2 = this.mc.fontRendererObj.getStringWidth(s3);
-                this.mc.fontRendererObj.drawStringWithShadow(s3, (float)(width / 2 - i2 / 2), (float)ySpacer, -1);
-                ySpacer += this.mc.fontRendererObj.FONT_HEIGHT;
-            }
-
-            ++ySpacer;
-        }
-
-        drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + i4 * 9, Integer.MIN_VALUE);
-
-        for (int k4 = 0; k4 < l3; ++k4) {
-            int l4 = k4 / i4;
-            int i5 = k4 % i4;
-            int j2 = j1 + l4 * i1 + l4 * 5;
-            int k2 = ySpacer + i5 * 9;
-            drawRect(j2, k2, j2 + i1, k2 + 8, 553648127);
+        int ySpacer = 50;
+        for (NetworkPlayerInfo networkPlayerInfo : playerList) {
+            int xSpacer = 0;
+            /* entry background */
+            drawRect(this.mc.displayWidth / 2 - width / 2, ySpacer, this.mc.displayWidth / 2 + width / 2, ySpacer + 8, 553648127);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-            if (k4 < playerList.size()) {
-                NetworkPlayerInfo playerInfo = (NetworkPlayerInfo)playerList.get(k4);
-                String playerName = this.getPlayerName(playerInfo);
-                GameProfile gameprofile = playerInfo.getGameProfile();
-                HPlayer hPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(gameprofile.getId());
+            NetworkPlayerInfo playerInfo = networkPlayerInfo;
+            String name = this.getPlayerName(playerInfo);
+            GameProfile gameProfile = playerInfo.getGameProfile();
 
-                if (flag) {
-                    EntityPlayer entityplayer = this.mc.theWorld.getPlayerEntityByUUID(gameprofile.getId());
-                    boolean flag1 = entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.CAPE) && (gameprofile.getName().equals("Dinnerbone") || gameprofile.getName().equals("Grumm"));
-                    this.mc.getTextureManager().bindTexture(playerInfo.getLocationSkin());
-                    int l2 = 8 + (flag1 ? 8 : 0);
-                    int i3 = 8 * (flag1 ? -1 : 1);
-                    Gui.drawScaledCustomSizeModalRect(j2, k2, 8.0F, (float)l2, 8, i3, 8, 8, 64.0F, 64.0F);
+            if (flag) {
+                /* renders the player's face */
+                EntityPlayer entityPlayer = this.mc.theWorld.getPlayerEntityByUUID(gameProfile.getId());
+                boolean flag1 = entityPlayer != null && entityPlayer.isWearing(EnumPlayerModelParts.CAPE) && (gameProfile.getName().equals("Dinnerbone") || gameProfile.getName().equals("Grumm"));
+                this.mc.getTextureManager().bindTexture(playerInfo.getLocationSkin());
+                int u = 8 + (flag1 ? 8 : 0);
+                int v = 8 * (flag1 ? -1 : 1);
+                Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 8.0F, u, 8, v, 8, 8, 64.0F, 64.0F);
 
-                    if (entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.HAT)) {
-                        int j3 = 8 + (flag1 ? 8 : 0);
-                        int k3 = 8 * (flag1 ? -1 : 1);
-                        Gui.drawScaledCustomSizeModalRect(j2, k2, 40.0F, (float)j3, 8, k3, 8, 8, 64.0F, 64.0F);
-                    }
-
-                    j2 += 9;
+                if (entityPlayer != null && entityPlayer.isWearing(EnumPlayerModelParts.HAT)) {
+                    Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 40.0F, u, 8, v, 8, 8, 64.0F, 64.0F);
                 }
 
-                /* This is where the names are rendered */
-                if (playerInfo.getGameType() == WorldSettings.GameType.SPECTATOR) {
-                    /* spectators */
-                    playerName = EnumChatFormatting.ITALIC + playerName;
-                    this.mc.fontRendererObj.drawStringWithShadow(playerName, (float)j2, (float)k2, -1862270977);
-                } else if (!playerName.contains("NPC")) /* avoid rendering npcs */ {
-                    /* everybody else */
-                    if (hPlayer != null) {
-                        Bedwars bw = (Bedwars)hPlayer.getGame("BEDWARS");
-                        playerName = hPlayer.getPlayerRank() + hPlayer.getPlayerRankColor() + hPlayer.getPlayerName();
-                        this.mc.fontRendererObj.drawStringWithShadow(bw.getStarColor(((StatInt)bw.star).getValue()).toString() + ((StatInt)bw.star).getValue() + "✫", j2 + 125, k2, -1);
-                    }
-
-                    this.mc.fontRendererObj.drawStringWithShadow(playerName, (float)j2, (float)k2, -1);
-                }
-
-                if (scoreObjectiveIn != null && playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
-                    int k5 = j2 + i + 1;
-                    int l5 = k5 + l;
-
-                    if (l5 - k5 > 5) {
-                        this.drawScoreboardValues(scoreObjectiveIn, k2, gameprofile.getName(), k5, l5, playerInfo);
-                    }
-                }
-
-//                this.drawPing(i1, j2 - (flag ? 9 : 0), k2, networkplayerinfo1);
+                /* adds x amount of pixels so that rendering name won't overlap with skin render */
+                xSpacer += 9;
             }
-        }
 
-        if (footerElements != null) {
-            ySpacer = ySpacer + i4 * 9 + 1;
-            drawRect(width / 2 - l1 / 2 - 1, ySpacer - 1, width / 2 + l1 / 2 + 1, ySpacer + footerElements.size() * this.mc.fontRendererObj.FONT_HEIGHT, Integer.MIN_VALUE);
-
-            for (String element : footerElements) {
-                int j5 = this.mc.fontRendererObj.getStringWidth(element);
-                this.mc.fontRendererObj.drawStringWithShadow(element, (float)(width / 2 - j5 / 2), (float)ySpacer, -1);
-                ySpacer += this.mc.fontRendererObj.FONT_HEIGHT;
+            if (playerInfo.getGameType() == WorldSettings.GameType.SPECTATOR) {
+                /* how you should render spectators */
+            } else {
+                /* how you should render everyone else */
+                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer, -1);
             }
+
+            if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
+                /* how you should draw the scoreboard values of players that aren't spectators and that have score objectives */
+            }
+
+            /* spaces each entry by the specified pixels */
+            ySpacer += 8;
         }
     }
 
