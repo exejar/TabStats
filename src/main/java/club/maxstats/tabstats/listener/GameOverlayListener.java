@@ -22,7 +22,7 @@ public class GameOverlayListener {
             Scoreboard scoreboard = this.mc.thePlayer.getWorldScoreboard();
             /* scoreboard.getObjectiveInDisplaySlot(0) gets the main score objective */
             /* this is where we render our new tab */
-            statsTab.renderPlayerlist(0, scoreboard, scoreboard.getObjectiveInDisplaySlot(0));
+            statsTab.renderPlayerlist(450, scoreboard, scoreboard.getObjectiveInDisplaySlot(0));
         }
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -83,13 +84,12 @@ public class StatsTab extends GuiPlayerTabOverlay {
             l = 0;
         }
 
-        /* weird ass flags that I don't understand currently and don't care about bc i'll probably remove them.. GG */
-        int i1 = Math.min(playerListSize * ((flag ? 9 : 0) + nameWidth + l + 13), width - 50) / playerListSize;
-        int l1 = i1 * playerListSize + (playerListSize - 1) * 5;
-
         /* the entire tab background */
-        drawRect(width / 2 - l1 / 2 - 1, 10 - 1, width / 2 + l1 / 2 + 1, 10 + playerListSize * 9, Integer.MIN_VALUE);
-        this.mc.fontRendererObj.drawStringWithShadow("Name           STAR    WS   FKDR    FINALS     WLR     WINS     BBLR", 0, 40, 0xFFFFFF);
+        ScaledResolution scaledRes = new ScaledResolution(this.mc);
+        int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
+        int startingY = 50;
+        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2,  startingY + (playerListSize + 1) * 9, Integer.MIN_VALUE);
+        this.mc.fontRendererObj.drawStringWithShadow("Name           STAR    WS   FKDR    FINALS     WLR     WINS     BBLR", startingX, 40, 0xFFFFFF);
         /* should not be like this ^
         should be like this
         this.mc.fontRendererObj.drawStringWithShadow("Name", nameX, sameY, color);
@@ -97,11 +97,13 @@ public class StatsTab extends GuiPlayerTabOverlay {
         etc...
         And use the corresponding label X's with the stats drawn in the for loop to match the same position */
 
-        int ySpacer = 50;
+        int ySpacer = startingY;
         for (NetworkPlayerInfo networkPlayerInfo : playerList) {
-            int xSpacer = 0;
+            int xSpacer = startingX;
             /* entry background */
-            drawRect(this.mc.displayWidth / 2 - width / 2, ySpacer, this.mc.displayWidth / 2 + width / 2, ySpacer + 8, 553648127);
+            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + 8, 553648127);
+
+            /* ignore this, this is just preparing the gl canvas for rendering */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -140,7 +142,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
             }
 
             /* spaces each entry by the specified pixels */
-            ySpacer += 8;
+            ySpacer += 9;
         }
     }
 
