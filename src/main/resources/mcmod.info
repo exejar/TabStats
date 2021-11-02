@@ -1,10 +1,10 @@
 [
   {
-    "modid": "${modid}",
-    "name": "${name}",
-    "description": "${description}",
-    "version": "${version}",
-    "mcversion": "${mcversion}",
+    "modid": "tabstats",
+    "name": "TabStats",
+    "description": A mod which displays Hypixel statistics built into your tab list!,
+    "version": "1.0.0,
+    "mcversion": "1.8.9",
     "url": "${url}",
     "updateUrl": "${updateUrl}",
     "authorList": [
