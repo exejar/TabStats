@@ -89,7 +89,22 @@ public class StatsTab extends GuiPlayerTabOverlay {
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
         int startingY = 50;
         drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2,  startingY + (playerListSize + 1) * 9, Integer.MIN_VALUE);
-        this.mc.fontRendererObj.drawStringWithShadow("Name           STAR    WS   FKDR    FINALS     WLR     WINS     BBLR", startingX, 40, 0xFFFFFF);
+        int NAMExpos = 144;
+        int STARxpos = 323;
+        int WSxpos = 363;
+        int FKDRxpos = 390;
+        int FINALSxpos = 430;
+        int WLRxpos = 480;
+        int WINSxpos = 515;
+        int BBLRxpos = 555;
+        this.mc.fontRendererObj.drawStringWithShadow("§lNAME", NAMExpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lSTAR", STARxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lWS", WSxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lFKDR", FKDRxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lFINALS", FINALSxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lWLR", WLRxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lWINS", WINSxpos, startingY - 9, 0xFFFFFF);
+        this.mc.fontRendererObj.drawStringWithShadow("§lBBLR", BBLRxpos, startingY - 9, 0xFFFFFF);
         /* should not be like this ^
         should be like this
         this.mc.fontRendererObj.drawStringWithShadow("Name", nameX, sameY, color);
