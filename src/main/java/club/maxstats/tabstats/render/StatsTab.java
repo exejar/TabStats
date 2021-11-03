@@ -2,8 +2,11 @@ package club.maxstats.tabstats.render;
 
 import club.maxstats.tabstats.TabStats;
 import club.maxstats.tabstats.playerapi.HPlayer;
-import club.maxstats.tabstats.playerapi.api.games.bedwars.Bedwars;
+import club.maxstats.tabstats.playerapi.api.stats.Stat;
+import club.maxstats.tabstats.playerapi.api.stats.StatDouble;
 import club.maxstats.tabstats.playerapi.api.stats.StatInt;
+import club.maxstats.tabstats.playerapi.api.stats.StatString;
+import club.maxstats.tabstats.util.ChatColor;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
@@ -41,6 +44,9 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
     private boolean isBeingRendered;
+    private final int entryHeight = 10;
+    private final int backgroundBorderSize = 12;
+    private final int headSize = 10;
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
         super(mcIn, guiIngameIn);
@@ -71,52 +77,48 @@ public class StatsTab extends GuiPlayerTabOverlay {
         playerList = playerList.subList(0, Math.min(playerList.size(), 80));
         int playerListSize = playerList.size();
 
-        boolean flag = this.mc.isIntegratedServerRunning() || this.mc.getNetHandler().getNetworkManager().getIsencrypted();
-        int l;
-
-        if (scoreObjectiveIn != null) {
-            if (scoreObjectiveIn.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-                l = 90;
-            } else {
-                l = objectiveWidth;
-            }
-        } else {
-            l = 0;
-        }
-
         /* the entire tab background */
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
         int startingY = 50;
-        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2,  startingY + (playerListSize + 1) * 9, Integer.MIN_VALUE);
-        int NAMExpos = 144;
-        int STARxpos = 323;
-        int WSxpos = 363;
-        int FKDRxpos = 390;
-        int FINALSxpos = 430;
-        int WLRxpos = 480;
-        int WINSxpos = 515;
-        int BBLRxpos = 555;
-        this.mc.fontRendererObj.drawStringWithShadow("§lNAME", NAMExpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lSTAR", STARxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lWS", WSxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lFKDR", FKDRxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lFINALS", FINALSxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lWLR", WLRxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lWINS", WINSxpos, startingY - 9, 0xFFFFFF);
-        this.mc.fontRendererObj.drawStringWithShadow("§lBBLR", BBLRxpos, startingY - 9, 0xFFFFFF);
-        /* should not be like this ^
-        should be like this
-        this.mc.fontRendererObj.drawStringWithShadow("Name", nameX, sameY, color);
-        this.mc.fontRendererObj.drawStringWithShadow("Star", starX, sameY, color);
-        etc...
-        And use the corresponding label X's with the stats drawn in the for loop to match the same position */
+        drawRect(startingX - this.backgroundBorderSize, startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
 
-        int ySpacer = startingY;
+        /* draw an entry rect for the stat name title */
+        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, 553648127);
+
+        /* Sets gamemode based off the name of the scoreboard */
+        String gamemode = ChatColor.stripColor(this.mc.thePlayer.getWorldScoreboard().getObjectiveInDisplaySlot(1).getDisplayName()).replace(" ", "");
+
+        /* your HPlayer object */
+        HPlayer theHPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(Minecraft.getMinecraft().thePlayer.getUniqueID());
+
+        /* this is a lambda, basically it's doing if (theHPlayer.getFormattedGameStats(gamemode) is null get BEDWARS if not continue and get gamemode
+           boolean ? (if true) do this : (if not true) do this;  */
+        // it's kind of redundant, as the chances of the formatted game stats being null is less than 0 O_o
+        List<Stat> gameStatTitleList = theHPlayer.getFormattedGameStats(gamemode) == null ? theHPlayer.getFormattedGameStats("BEDWARS") : theHPlayer.getFormattedGameStats(gamemode);
+
+        /* Start with drawing the name, as this will always be here and isn't inside of the Stat List */
+        int statXSpacer = startingX + this.headSize + 2;
+        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + 1, ChatColor.WHITE.getRGB());
+
+        /* adds 180 pixels to statXSpacer since name's are way longer than stats */
+        statXSpacer += 140;
+
+        /* loops through all the stats that should be displayed and renders their stat titles */
+        for (Stat stat : gameStatTitleList) {
+            String statName = stat.getStatName();
+            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + 1, ChatColor.WHITE.getRGB());
+
+            /* adds spacer for next stat */
+            statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + statName) + 10;
+        }
+
+        /* add entryHeight so it starts below the stat name title */
+        int ySpacer = startingY + this.entryHeight + 1;
         for (NetworkPlayerInfo networkPlayerInfo : playerList) {
             int xSpacer = startingX;
             /* entry background */
-            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + 8, 553648127);
+            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, 553648127);
 
             /* ignore this, this is just preparing the gl canvas for rendering */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -128,6 +130,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
             String name = this.getPlayerName(playerInfo);
             GameProfile gameProfile = playerInfo.getGameProfile();
 
+            boolean flag = this.mc.isIntegratedServerRunning() || this.mc.getNetHandler().getNetworkManager().getIsencrypted();
             if (flag) {
                 /* renders the player's face */
                 EntityPlayer entityPlayer = this.mc.theWorld.getPlayerEntityByUUID(gameProfile.getId());
@@ -135,21 +138,55 @@ public class StatsTab extends GuiPlayerTabOverlay {
                 this.mc.getTextureManager().bindTexture(playerInfo.getLocationSkin());
                 int u = 8 + (flag1 ? 8 : 0);
                 int v = 8 * (flag1 ? -1 : 1);
-                Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 8.0F, u, 8, v, 8, 8, 64.0F, 64.0F);
+                Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 8.0F, u, 8, v, this.headSize, this.headSize, 64.0F, 64.0F);
 
                 if (entityPlayer != null && entityPlayer.isWearing(EnumPlayerModelParts.HAT)) {
-                    Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 40.0F, u, 8, v, 8, 8, 64.0F, 64.0F);
+                    Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 40.0F, u, 8, v, this.headSize, this.headSize, 64.0F, 64.0F);
                 }
 
                 /* adds x amount of pixels so that rendering name won't overlap with skin render */
-                xSpacer += 9;
+                xSpacer += this.headSize + 2;
             }
 
             if (playerInfo.getGameType() == WorldSettings.GameType.SPECTATOR) {
                 /* how you should render spectators */
             } else {
                 /* how you should render everyone else */
-                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer, -1);
+                HPlayer hPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(gameProfile.getId());
+                if (hPlayer != null) {
+                    /* render stats here */
+                    name = hPlayer.getPlayerRank() + ChatColor.RESET + name;
+
+                    /* gets bedwars if the gamemode is not a game added to the hplayer's game list, otherwise, grab the game stats based on the scoreboard */
+                    List<Stat> statList = hPlayer.getFormattedGameStats(gamemode) == null ? hPlayer.getFormattedGameStats("BEDWARS") : hPlayer.getFormattedGameStats(gamemode);
+                    /* start at the first stat */
+                    int valueXSpacer = startingX + 140 + this.headSize + 2;
+
+                    for (Stat stat : statList) {
+                        String statValue = "";
+
+                        /* finds the exact stat type so it can properly retrieve the stat value */
+                        switch (stat.getType()) {
+                            case INT:
+                                statValue = Integer.toString(((StatInt)stat).getValue());
+                                break;
+                            case DOUBLE:
+                                statValue = Double.toString(((StatDouble)stat).getValue());
+                                break;
+                            case STRING:
+                                statValue = ((StatString)stat).getValue();
+                                break;
+                        }
+
+                        // fill in the render with appropriate values
+                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + 1, ChatColor.WHITE.getRGB());
+
+                        // do something here to valueXSpacer
+                        valueXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + stat.getStatName()) + 10;
+                    }
+                }
+
+                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + 1, -1);
             }
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
@@ -157,7 +194,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
             }
 
             /* spaces each entry by the specified pixels */
-            ySpacer += 9;
+            ySpacer += this.entryHeight + 1;
         }
     }
 
