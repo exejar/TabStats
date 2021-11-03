@@ -102,7 +102,7 @@ public class Bedwars extends BedwarsUtil {
     @Override
     public void setFormattedStatList() {
         StatString star = new StatString("Star");
-        star.setValue(this.getStarColor(((StatInt)this.star).getValue()).toString() + ((StatInt)this.star).getValue());
+        star.setValue(this.getStarColor(((StatInt)this.star).getValue()).toString() + ((StatInt)this.star).getValue() + "\u272B");
         this.formattedStatList.add(star);
 
         StatString ws = new StatString("WS");
