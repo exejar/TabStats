@@ -99,7 +99,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
         /* Start with drawing the name, as this will always be here and isn't inside of the Stat List */
         int statXSpacer = startingX + this.headSize + 2;
-        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + 1, ChatColor.WHITE.getRGB());
+        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
         /* adds 180 pixels to statXSpacer since name's are way longer than stats */
         statXSpacer += 140;
@@ -186,7 +186,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     }
                 }
 
-                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + 1, -1);
+                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
             }
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
