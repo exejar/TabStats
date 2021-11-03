@@ -44,9 +44,9 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
     private boolean isBeingRendered;
-    private final int entryHeight = 10;
+    private final int entryHeight = 12;
     private final int backgroundBorderSize = 12;
-    private final int headSize = 10;
+    private final int headSize = 12;
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
         super(mcIn, guiIngameIn);
@@ -107,7 +107,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* loops through all the stats that should be displayed and renders their stat titles */
         for (Stat stat : gameStatTitleList) {
             String statName = stat.getStatName();
-            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + 1, ChatColor.WHITE.getRGB());
+            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
             /* adds spacer for next stat */
             statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + statName) + 10;
@@ -179,7 +179,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
                         }
 
                         // fill in the render with appropriate values
-                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + 1, ChatColor.WHITE.getRGB());
+                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
                         // do something here to valueXSpacer
                         valueXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + stat.getStatName()) + 10;
