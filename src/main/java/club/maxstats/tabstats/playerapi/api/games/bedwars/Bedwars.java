@@ -94,11 +94,7 @@ public class Bedwars extends BedwarsUtil {
     /* retrieves the formatted stat list */
     @Override
     public List<Stat> getFormattedStatList() {
-        List<Stat> returnList = new ArrayList<>(this.formattedStatList);
-        StatString session = new StatString("Session");
-        session.setValue(this.getFormattedSessionTime());
-        returnList.add(session);
-        return returnList;
+        return this.formattedStatList;
     }
 
     /* sets the formatted stat list when the player is first grabbed */
