@@ -113,6 +113,10 @@ public class Bedwars extends BedwarsUtil {
         fkdr.setValue(this.getFkdrColor(this.getFkdr(this)).toString() + this.getFkdr(this));
         this.formattedStatList.add(fkdr);
 
+        StatString finals = new StatString("FINALS");
+        finals.setValue(/* this sets the color >>*/ this.getFinalsColor(((StatInt)this.finalKills).getValue()).toString() + /* this is what's actually displayed >>>*/ ((StatInt)this.finalKills).getValue());
+        this.formattedStatList.add(finals);
+
         StatString wlr = new StatString("WLR");
         wlr.setValue(this.getWlrColor(this.getWlr(this)).toString() + this.getWlr(this));
         this.formattedStatList.add(wlr);

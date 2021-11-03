@@ -130,3 +130,44 @@ public abstract class BedwarsUtil extends HGameBase {
             return ChatColor.RED;
         }
     }
+
+    public ChatColor getFinalsColor(int finals) {
+        if (finals < 300) {
+            return ChatColor.GRAY;
+        } else if (finals < 500) {
+            return ChatColor.WHITE;
+        } else if (finals < 1000) {
+            return ChatColor.GOLD;
+        } else if (finals < 2000) {
+            return ChatColor.DARK_GREEN;
+        } else if (finals < 3000) {
+            return ChatColor.RED;
+        } else if (finals < 5000) {
+            return ChatColor.DARK_RED;
+        } else if (finals < 10000) {
+            return ChatColor.LIGHT_PURPLE;
+        } else {
+            return ChatColor.DARK_PURPLE;
+        }
+    }
+
+    public ChatColor getWinsColor(int wins) {
+        if (wins < 100) {
+            return ChatColor.GRAY;
+        } else if (wins < 300) {
+            return ChatColor.WHITE;
+        } else if (wins < 500) {
+            return ChatColor.GOLD;
+        } else if (wins < 1000) {
+            return ChatColor.DARK_GREEN;
+        } else if (wins < 2000) {
+            return ChatColor.RED;
+        } else if (wins < 2500) {
+            return ChatColor.DARK_RED;
+        } else if (wins < 3000) {
+            return ChatColor.LIGHT_PURPLE;
+        } else {
+            return ChatColor.DARK_PURPLE;
+        }
+    }
+}
