@@ -5,6 +5,7 @@ import club.maxstats.tabstats.playerapi.api.stats.Stat;
 import club.maxstats.tabstats.util.ChatColor;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class HPlayer {
     }
 
     public List<Stat> getFormattedGameStats(String gameName) {
-        return this.gameMap.get(gameName).getFormattedStatList();
+        return this.gameMap.get(gameName) == null ? new ArrayList<>() : this.gameMap.get(gameName).getFormattedStatList();
     }
 
     public void setNicked(boolean nicked) { this.nicked = nicked; }
@@ -104,7 +105,7 @@ public class HPlayer {
         try {
             rank = player.get("newPackageRank").getAsString();
         } catch (NullPointerException e) {
-            s = ChatColor.GRAY + "";
+            s = ChatColor.GRAY + "[NON] ";
         }
         try {
             rankColour = player.get("rankPlusColor").getAsString();
@@ -140,7 +141,7 @@ public class HPlayer {
     }
 
     public String getPlayerRank() {
-        return this.playerRank == null || this.playerRank.isEmpty() ? "§7" : this.playerRank;
+        return this.playerRank == null || this.playerRank.isEmpty() ? "§7[NON] " : this.playerRank;
     }
 
     public String getPlayerRankColor() {
