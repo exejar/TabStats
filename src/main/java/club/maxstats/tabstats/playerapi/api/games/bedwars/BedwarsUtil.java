@@ -124,10 +124,33 @@ public abstract class BedwarsUtil extends HGameBase {
             return ChatColor.LIGHT_PURPLE;
         } else if (star < 900) {
             return ChatColor.BLUE;
-        } else if (star < 1000) {
-            return ChatColor.DARK_PURPLE;
         } else {
-            return ChatColor.RED;
+            return ChatColor.DARK_PURPLE;
+        }
+    }
+
+    /* should be the actual method used when displaying stars */
+    public String getStarWithColor(int star) {
+        String starString = Integer.toString(star);
+        if (star < 1000) {
+            return getStarColor(star) + starString + "\u272B";
+        } else {
+            /* if it doesn't meet any requirements, just use normal rainbow colors and star unicode */
+            ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};;
+            String starUnicode = "\u272B";
+
+            /* prestige stars */
+            if (star < 2000) {
+                starUnicode = "\u272A";
+                if (star < 1200) {
+                    colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY};
+                }
+            } else if (star < 3000) {
+                starUnicode = "\u269D";
+                colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};
+            }
+
+            return colors[0].toString() + starString.charAt(0) + colors[1].toString() + starString.charAt(1) + colors[2].toString() + starString.charAt(2) + colors[3].toString() + starString.charAt(3) + colors[4].toString() + starUnicode;
         }
     }
 
