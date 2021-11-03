@@ -104,6 +104,7 @@ public abstract class BedwarsUtil extends HGameBase {
         }
     }
 
+    // we need to update this o_O
     public ChatColor getStarColor(int star) {
         if (star < 100) {
             return ChatColor.GRAY;
@@ -129,4 +130,3 @@ public abstract class BedwarsUtil extends HGameBase {
             return ChatColor.RED;
         }
     }
-}

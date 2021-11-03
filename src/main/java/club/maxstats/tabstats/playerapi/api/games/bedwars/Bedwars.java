@@ -86,6 +86,12 @@ public class Bedwars extends BedwarsUtil {
         return this.statList;
     }
 
+    // this is what we're grabbing as the stat list.
+    // so the first stat in the for loop that we'll encounter is Star
+    // then we'll encounter WS
+    // then FKDR
+    // the for loop will grab these values accordingly and store it into the statValue string
+    /* retrieves the formatted stat list */
     @Override
     public List<Stat> getFormattedStatList() {
         List<Stat> returnList = new ArrayList<>(this.formattedStatList);
@@ -95,6 +101,8 @@ public class Bedwars extends BedwarsUtil {
         return returnList;
     }
 
+    /* sets the formatted stat list when the player is first grabbed */
+    /* only set a single time */
     @Override
     public void setFormattedStatList() {
         StatString star = new StatString("Star");
@@ -102,7 +110,7 @@ public class Bedwars extends BedwarsUtil {
         this.formattedStatList.add(star);
 
         StatString ws = new StatString("WS");
-        ws.setValue(this.getWSColor(((StatInt)winstreak).getValue()).toString() + ((StatInt)winstreak).getValue());
+        ws.setValue(this.getWSColor(((StatInt)this.winstreak).getValue()).toString() + ((StatInt)this.winstreak).getValue());
         this.formattedStatList.add(ws);
 
         StatString fkdr = new StatString("FKDR");
@@ -112,6 +120,10 @@ public class Bedwars extends BedwarsUtil {
         StatString wlr = new StatString("WLR");
         wlr.setValue(this.getWlrColor(this.getWlr(this)).toString() + this.getWlr(this));
         this.formattedStatList.add(wlr);
+
+        StatString wins = new StatString("WINS");
+        wins.setValue(/* this sets the color >>*/ this.getWinsColor(((StatInt)this.wins).getValue()).toString() + /* this is what's actually displayed >>>*/ ((StatInt)this.wins).getValue());
+        this.formattedStatList.add(wins);
 
         StatString bblr = new StatString("BBLR");
         bblr.setValue(this.getBblrColor(this.getBblr(this)).toString() + this.getBblr(this));
