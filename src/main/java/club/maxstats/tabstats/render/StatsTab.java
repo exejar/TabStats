@@ -46,7 +46,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private boolean isBeingRendered;
     private final int entryHeight = 12;
     private final int backgroundBorderSize = 12;
-    private final int headSize = 12;
+    public static final int headSize = 12;
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
         super(mcIn, guiIngameIn);
@@ -54,8 +54,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         this.guiIngame = guiIngameIn;
     }
 
-    @Override
-    public void renderPlayerlist(int width, Scoreboard scoreboardIn, ScoreObjective scoreObjectiveIn) {
+    public void renderNewPlayerlist(int width, Scoreboard scoreboardIn, ScoreObjective scoreObjectiveIn, List<Stat> gameStatTitleList, String gamemode) {
         NetHandlerPlayClient nethandler = this.mc.thePlayer.sendQueue;
         List<NetworkPlayerInfo> playerList = field_175252_a.sortedCopy(nethandler.getPlayerInfoMap());
         /* width of the player's name */
@@ -86,19 +85,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* draw an entry rect for the stat name title */
         drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, 553648127);
 
-        /* Sets gamemode based off the name of the scoreboard */
-        String gamemode = ChatColor.stripColor(this.mc.thePlayer.getWorldScoreboard().getObjectiveInDisplaySlot(1).getDisplayName()).replace(" ", "");
-
-        /* your HPlayer object */
-        HPlayer theHPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(Minecraft.getMinecraft().thePlayer.getUniqueID());
-
-        /* this is a lambda, basically it's doing if (theHPlayer.getFormattedGameStats(gamemode) is null get BEDWARS if not continue and get gamemode
-           boolean ? (if true) do this : (if not true) do this;  */
-        // it's kind of redundant, as the chances of the formatted game stats being null is less than 0 O_o
-        List<Stat> gameStatTitleList = theHPlayer.getFormattedGameStats(gamemode) == null ? theHPlayer.getFormattedGameStats("BEDWARS") : theHPlayer.getFormattedGameStats(gamemode);
-
         /* Start with drawing the name, as this will always be here and isn't inside of the Stat List */
-        int statXSpacer = startingX + this.headSize + 2;
+        int statXSpacer = startingX + headSize + 2;
         this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
         /* adds 180 pixels to statXSpacer since name's are way longer than stats */
@@ -138,14 +126,14 @@ public class StatsTab extends GuiPlayerTabOverlay {
                 this.mc.getTextureManager().bindTexture(playerInfo.getLocationSkin());
                 int u = 8 + (flag1 ? 8 : 0);
                 int v = 8 * (flag1 ? -1 : 1);
-                Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 8.0F, u, 8, v, this.headSize, this.headSize, 64.0F, 64.0F);
+                Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 8.0F, u, 8, v, headSize, headSize, 64.0F, 64.0F);
 
                 if (entityPlayer != null && entityPlayer.isWearing(EnumPlayerModelParts.HAT)) {
-                    Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 40.0F, u, 8, v, this.headSize, this.headSize, 64.0F, 64.0F);
+                    Gui.drawScaledCustomSizeModalRect(xSpacer, ySpacer, 40.0F, u, 8, v, headSize, headSize, 64.0F, 64.0F);
                 }
 
                 /* adds x amount of pixels so that rendering name won't overlap with skin render */
-                xSpacer += this.headSize + 2;
+                xSpacer += headSize + 2;
             }
 
             if (playerInfo.getGameType() == WorldSettings.GameType.SPECTATOR) {
@@ -160,7 +148,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     /* gets bedwars if the gamemode is not a game added to the hplayer's game list, otherwise, grab the game stats based on the scoreboard */
                     List<Stat> statList = hPlayer.getFormattedGameStats(gamemode) == null ? hPlayer.getFormattedGameStats("BEDWARS") : hPlayer.getFormattedGameStats(gamemode);
                     /* start at the first stat */
-                    int valueXSpacer = startingX + 140 + this.headSize + 2;
+                    int valueXSpacer = startingX + 140 + headSize + 2;
 
                     for (Stat stat : statList) {
                         String statValue = "";
