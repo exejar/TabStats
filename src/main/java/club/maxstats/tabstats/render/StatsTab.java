@@ -79,7 +79,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* the entire tab background */
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
-        int startingY = 50;
+        int startingY = 35;
         drawRect(startingX - this.backgroundBorderSize, startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
 
         /* draw an entry rect for the stat name title */
@@ -89,7 +89,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         int statXSpacer = startingX + headSize + 2;
         this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
-        /* adds 180 pixels to statXSpacer since name's are way longer than stats */
+        /* adds 140 pixels to statXSpacer since name's are way longer than stats */
         statXSpacer += 140;
 
         /* loops through all the stats that should be displayed and renders their stat titles */
@@ -103,7 +103,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
         /* add entryHeight so it starts below the stat name title */
         int ySpacer = startingY + this.entryHeight + 1;
-        for (NetworkPlayerInfo networkPlayerInfo : playerList) {
+        for (NetworkPlayerInfo playerInfo : playerList) {
             int xSpacer = startingX;
             /* entry background */
             drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, 553648127);
@@ -114,7 +114,6 @@ public class StatsTab extends GuiPlayerTabOverlay {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-            NetworkPlayerInfo playerInfo = networkPlayerInfo;
             String name = this.getPlayerName(playerInfo);
             GameProfile gameProfile = playerInfo.getGameProfile();
 
@@ -142,8 +141,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
                 /* how you should render everyone else */
                 HPlayer hPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(gameProfile.getId());
                 if (hPlayer != null) {
-                    /* render stats here */
-                    name = hPlayer.getPlayerRank() + ChatColor.RESET + name;
+                    /* render tabstats here */
+                    name = hPlayer.getPlayerRank() + ChatColor.RESET + (name.contains(ChatColor.OBFUSCATE.toString()) ? hPlayer.getPlayerRankColor() + hPlayer.getPlayerName() : name);
 
                     /* gets bedwars if the gamemode is not a game added to the hplayer's game list, otherwise, grab the game stats based on the scoreboard */
                     List<Stat> statList = hPlayer.getFormattedGameStats(gamemode) == null ? hPlayer.getFormattedGameStats("BEDWARS") : hPlayer.getFormattedGameStats(gamemode);
@@ -166,19 +165,31 @@ public class StatsTab extends GuiPlayerTabOverlay {
                                 break;
                         }
 
-                        // fill in the render with appropriate values
+                        // draws the stats
                         this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
-
-                        // do something here to valueXSpacer
                         valueXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + stat.getStatName()) + 10;
                     }
                 }
 
+                // draws the players name
                 this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
             }
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
-                /* how you should draw the scoreboard values of players that aren't spectators and that have score objectives */
+                /* if player isn't a spectator and scoreobjective isn't null, render their score objective */
+                int spacer;
+                if (scoreObjectiveIn != null) {
+                    if (scoreObjectiveIn.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
+                        spacer = 90;
+                    } else {
+                        spacer = objectiveWidth;
+                    }
+                } else {
+                    spacer = 0;
+                }
+
+//                System.out.println(scoreObjectiveIn.getDisplayName() + " - " + scoreObjectiveIn.getName() + " - " + scoreObjectiveIn.getCriteria());
+                this.drawScoreboardValues(scoreObjectiveIn, ySpacer + (this.entryHeight / 2 - 4), gameProfile.getName(), 800, 300, playerInfo);
             }
 
             /* spaces each entry by the specified pixels */
@@ -186,61 +197,61 @@ public class StatsTab extends GuiPlayerTabOverlay {
         }
     }
 
-    private void drawScoreboardValues(ScoreObjective p_175247_1_, int p_175247_2_, String p_175247_3_, int p_175247_4_, int p_175247_5_, NetworkPlayerInfo p_175247_6_) {
-        int i = p_175247_1_.getScoreboard().getValueFromObjective(p_175247_3_, p_175247_1_).getScorePoints();
+    private void drawScoreboardValues(ScoreObjective objectiveIn, int y, String playerName, int startX, int endX, NetworkPlayerInfo playerInfo) {
+        int i = objectiveIn.getScoreboard().getValueFromObjective(playerName, objectiveIn).getScorePoints();
 
-        if (p_175247_1_.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
+        if (objectiveIn.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
             this.mc.getTextureManager().bindTexture(icons);
 
-            if (this.lastTimeOpened == p_175247_6_.func_178855_p()) {
-                if (i < p_175247_6_.func_178835_l()) {
-                    p_175247_6_.func_178846_a(Minecraft.getSystemTime());
-                    p_175247_6_.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 20));
-                } else if (i > p_175247_6_.func_178835_l()) {
-                    p_175247_6_.func_178846_a(Minecraft.getSystemTime());
-                    p_175247_6_.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 10));
+            if (this.lastTimeOpened == playerInfo.func_178855_p()) {
+                if (i < playerInfo.func_178835_l()) {
+                    playerInfo.func_178846_a(Minecraft.getSystemTime());
+                    playerInfo.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 20));
+                } else if (i > playerInfo.func_178835_l()) {
+                    playerInfo.func_178846_a(Minecraft.getSystemTime());
+                    playerInfo.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 10));
                 }
             }
 
-            if (Minecraft.getSystemTime() - p_175247_6_.func_178847_n() > 1000L || this.lastTimeOpened != p_175247_6_.func_178855_p()) {
-                p_175247_6_.func_178836_b(i);
-                p_175247_6_.func_178857_c(i);
-                p_175247_6_.func_178846_a(Minecraft.getSystemTime());
+            if (Minecraft.getSystemTime() - playerInfo.func_178847_n() > 1000L || this.lastTimeOpened != playerInfo.func_178855_p()) {
+                playerInfo.func_178836_b(i);
+                playerInfo.func_178857_c(i);
+                playerInfo.func_178846_a(Minecraft.getSystemTime());
             }
 
-            p_175247_6_.func_178843_c(this.lastTimeOpened);
-            p_175247_6_.func_178836_b(i);
-            int j = MathHelper.ceiling_float_int((float)Math.max(i, p_175247_6_.func_178860_m()) / 2.0F);
-            int k = Math.max(MathHelper.ceiling_float_int((float)(i / 2)), Math.max(MathHelper.ceiling_float_int((float)(p_175247_6_.func_178860_m() / 2)), 10));
-            boolean flag = p_175247_6_.func_178858_o() > (long)this.guiIngame.getUpdateCounter() && (p_175247_6_.func_178858_o() - (long)this.guiIngame.getUpdateCounter()) / 3L % 2L == 1L;
+            playerInfo.func_178843_c(this.lastTimeOpened);
+            playerInfo.func_178836_b(i);
+            int j = MathHelper.ceiling_float_int((float)Math.max(i, playerInfo.func_178860_m()) / 2.0F);
+            int k = Math.max(MathHelper.ceiling_float_int((float)(i / 2)), Math.max(MathHelper.ceiling_float_int((float)(playerInfo.func_178860_m() / 2)), 10));
+            boolean flag = playerInfo.func_178858_o() > (long)this.guiIngame.getUpdateCounter() && (playerInfo.func_178858_o() - (long)this.guiIngame.getUpdateCounter()) / 3L % 2L == 1L;
 
             if (j > 0) {
-                float f = Math.min((float)(p_175247_5_ - p_175247_4_ - 4) / (float)k, 9.0F);
+                float f = Math.min((float)(endX - startX - 4) / (float)k, 9.0F);
 
                 if (f > 3.0F) {
                     for (int l = j; l < k; ++l) {
-                        this.drawTexturedModalRect((float)p_175247_4_ + (float)l * f, (float)p_175247_2_, flag ? 25 : 16, 0, 9, 9);
+                        this.drawTexturedModalRect((float)startX + (float)l * f, (float)y, flag ? 25 : 16, 0, 9, 9);
                     }
 
                     for (int j1 = 0; j1 < j; ++j1) {
-                        this.drawTexturedModalRect((float)p_175247_4_ + (float)j1 * f, (float)p_175247_2_, flag ? 25 : 16, 0, 9, 9);
+                        this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, flag ? 25 : 16, 0, 9, 9);
 
                         if (flag) {
-                            if (j1 * 2 + 1 < p_175247_6_.func_178860_m()) {
-                                this.drawTexturedModalRect((float)p_175247_4_ + (float)j1 * f, (float)p_175247_2_, 70, 0, 9, 9);
+                            if (j1 * 2 + 1 < playerInfo.func_178860_m()) {
+                                this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, 70, 0, 9, 9);
                             }
 
-                            if (j1 * 2 + 1 == p_175247_6_.func_178860_m()) {
-                                this.drawTexturedModalRect((float)p_175247_4_ + (float)j1 * f, (float)p_175247_2_, 79, 0, 9, 9);
+                            if (j1 * 2 + 1 == playerInfo.func_178860_m()) {
+                                this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, 79, 0, 9, 9);
                             }
                         }
 
                         if (j1 * 2 + 1 < i) {
-                            this.drawTexturedModalRect((float)p_175247_4_ + (float)j1 * f, (float)p_175247_2_, j1 >= 10 ? 160 : 52, 0, 9, 9);
+                            this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, j1 >= 10 ? 160 : 52, 0, 9, 9);
                         }
 
                         if (j1 * 2 + 1 == i) {
-                            this.drawTexturedModalRect((float)p_175247_4_ + (float)j1 * f, (float)p_175247_2_, j1 >= 10 ? 169 : 61, 0, 9, 9);
+                            this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, j1 >= 10 ? 169 : 61, 0, 9, 9);
                         }
                     }
                 } else {
@@ -248,16 +259,16 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     int i1 = (int)((1.0F - f1) * 255.0F) << 16 | (int)(f1 * 255.0F) << 8;
                     String s = "" + (float)i / 2.0F;
 
-                    if (p_175247_5_ - this.mc.fontRendererObj.getStringWidth(s + "hp") >= p_175247_4_) {
+                    if (endX - this.mc.fontRendererObj.getStringWidth(s + "hp") >= startX) {
                         s = s + "hp";
                     }
 
-                    this.mc.fontRendererObj.drawStringWithShadow(s, (float)((p_175247_5_ + p_175247_4_) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float)p_175247_2_, i1);
+                    this.mc.fontRendererObj.drawStringWithShadow(s, (float)((endX + startX) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float)y, i1);
                 }
             }
         } else {
             String s1 = EnumChatFormatting.YELLOW + "" + i;
-            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(p_175247_5_ - this.mc.fontRendererObj.getStringWidth(s1)), (float)p_175247_2_, 16777215);
+            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y, 16777215);
         }
     }
 
