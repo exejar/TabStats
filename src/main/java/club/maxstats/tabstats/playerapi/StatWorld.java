@@ -87,9 +87,12 @@ public class StatWorld {
                     Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
                     Duels duels = new Duels(playerName, playerUUID, wholeObject);
 
-
                     hPlayer.addGames(bw, duels);
-                    hPlayer.setPlayerRank(wholeObject.get("player").getAsJsonObject());
+
+                    JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
+
+                    hPlayer.setPlayerRank(playerObject);
+                    hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
                 }
             }
 

@@ -45,6 +45,7 @@ public class HPlayer {
     }
 
     /* Meant for null api players */
+    /* I use this to remove boilerplate as well */
     public HPlayer(String playerUUID, String playerName) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
@@ -69,6 +70,10 @@ public class HPlayer {
 
     public String getPlayerName() {
         return this.playerName;
+    }
+
+    public void setPlayerName(String name) {
+        this.playerName = name;
     }
 
     public String getNickname() {
