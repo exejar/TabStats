@@ -47,6 +47,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
     private boolean isBeingRendered;
+    /* whether or not rank should come before color prefix */
+    private boolean rankBeforePrefix = false;
     private final int entryHeight = 12;
     private final int backgroundBorderSize = 12;
     public static final int headSize = 12;
@@ -92,8 +94,6 @@ public class StatsTab extends GuiPlayerTabOverlay {
             /* this is usually the formatted name meant for display */
             String objectiveDisplayname = WordUtils.capitalize(scoreObjectiveIn.getDisplayName().replace("_", ""));
 
-            /* move starting X back based on length of rendered score objective */
-            startingX -= (10 + this.mc.fontRendererObj.getStringWidth(objectiveDisplayname));
             /* you can change this value to objectiveRawName, but I like using the displayname */
             objectiveName = objectiveDisplayname;
         }
@@ -166,7 +166,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
                 HPlayer hPlayer = TabStats.getTabStats().getStatWorld().getPlayerByUUID(gameProfile.getId());
                 if (hPlayer != null) {
                     /* render tabstats here */
-                    name = hPlayer.getPlayerRank() + ChatColor.RESET + (name.contains(ChatColor.OBFUSCATE.toString()) ? hPlayer.getPlayerRankColor() + hPlayer.getPlayerName() : name);
+                    name = name.contains(ChatColor.OBFUSCATE.toString()) ? hPlayer.getPlayerRankColor() + hPlayer.getPlayerName() : this.getHPlayerName(playerInfo, hPlayer);
 
                     /* gets bedwars if the gamemode is not a game added to the hplayer's game list, otherwise, grab the game stats based on the scoreboard */
                     List<Stat> statList = hPlayer.getFormattedGameStats(gamemode) == null ? hPlayer.getFormattedGameStats("BEDWARS") : hPlayer.getFormattedGameStats(gamemode);
@@ -299,5 +299,33 @@ public class StatsTab extends GuiPlayerTabOverlay {
             ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
             return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != WorldSettings.GameType.SPECTATOR, p_compare_2_.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "").compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName()).result();
         }
+    }
+
+    /* Custom Player Name Formatter */
+    public String getHPlayerName(NetworkPlayerInfo playerInfo, HPlayer hPlayer) {
+        ScorePlayerTeam team = playerInfo.getPlayerTeam();
+        String playerRank = hPlayer.getPlayerRank();
+
+        if (team != null) {
+            /* smart replacement of ranks */
+            String colorPrefix = team.getColorPrefix();
+            if (ChatColor.stripColor(colorPrefix).contains(ChatColor.stripColor(playerRank))) {
+                playerRank = "";
+//                /* aqua colored MVP++ */
+//                if (!colorPrefix.contains(playerRank) && colorPrefix.contains("++")) {
+//                    colorPrefix = colorPrefix.replace(colorPrefix.substring(colorPrefix.indexOf("["), colorPrefix.indexOf("]") + 1), "").trim();
+//                } else {
+//                    colorPrefix = colorPrefix.replace(playerRank, "");
+//                }
+            }
+
+            if (this.rankBeforePrefix) {
+                return playerRank + colorPrefix + playerInfo.getGameProfile().getName() + team.getColorSuffix();
+            } else {
+                return colorPrefix + playerRank + playerInfo.getGameProfile().getName() + team.getColorSuffix();
+            }
+        }
+
+        return this.getPlayerName(playerInfo);
     }
 }
