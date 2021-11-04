@@ -133,34 +133,46 @@ public abstract class BedwarsUtil extends HGameBase {
 
     /* should be the actual method used when displaying stars */
     public String getStarWithColor(int star) {
+        star = 2169;
+        /* how many colors there are in the array */
+        int colorAmount = 5;
         String starString = Integer.toString(star);
         if (star < 1000) {
             return getStarColor(star) + starString + "\u272B";
         } else {
             /* if it doesn't meet any requirements, just use normal rainbow colors and star unicode */
-            ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};
+            ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE, ChatColor.DARK_PURPLE};
             String starUnicode = "\u272B";
+            /* rainbow has 7 colors */
+            colorAmount = 7;
 
             /* prestige stars */
-            if (star < 2000) {
-                starUnicode = "\u272A";
-                if (star < 1200 && star >= 1100) {
-                    colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY};
+            if (star >= 1100) {
+                if (star < 2000) {
+                    starUnicode = "\u272A";
+                    colorAmount = 5;
+                    if (star < 1200) {
+                        colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY};
+                    } else if (star < 1300) {
+                        colors = new ChatColor[]{ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD};
+                    } else if (star < 1400) {
+                        colors = new ChatColor[]{ChatColor.AQUA, ChatColor.AQUA, ChatColor.AQUA, ChatColor.AQUA, ChatColor.DARK_AQUA};
+                    }
+                } else if (star < 3000) {
+                    starUnicode = "\u269D";
+                    colorAmount = 6;
+                    if (star < 2100) {
+                        colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.GOLD};
+                    } else if (star < 2200) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.GOLD, ChatColor.GOLD, ChatColor.WHITE, ChatColor.WHITE, ChatColor.AQUA, ChatColor.DARK_AQUA, ChatColor.DARK_AQUA};
+                    }
                 }
-            } else if (star < 3000) {
-                starUnicode = "\u269D";
-                colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};
             }
 
-            this.starWave = (long)((System.currentTimeMillis() % 1000L / 1000.0F) * 5);
+            this.starWave = (long)((System.currentTimeMillis() % 550L / 550.0F) * colorAmount);
 
-            System.out.println((int)(starWave + 0) % 4);
-            System.out.println((int)(starWave + 1) % 4);
-            System.out.println((int)(starWave + 2) % 4);
-            System.out.println((int)(starWave + 3) % 4);
-            System.out.println((int)(starWave + 4) % 4);
-
-            return colors[(int)starWave].toString() + starString.charAt(0) + colors[(int)(starWave + 1) % 5].toString() + starString.charAt(1) + colors[(int)(starWave + 2) % 5].toString() + starString.charAt(2) + colors[(int)(starWave + 3) % 5].toString() + starString.charAt(3) + colors[(int)(starWave + 4) % 5].toString() + starUnicode;
+            return colors[(int)(this.starWave + 4) % colorAmount].toString() + starString.charAt(0) + colors[(int)(this.starWave + 3) % colorAmount].toString() + starString.charAt(1) + colors[(int)(this.starWave + 2) % colorAmount].toString() + starString.charAt(2) + colors[(int)(this.starWave + 1) % colorAmount].toString() + starString.charAt(3) + colors[(int)(this.starWave + 0) % colorAmount].toString() + starUnicode;
         }
     }
 
