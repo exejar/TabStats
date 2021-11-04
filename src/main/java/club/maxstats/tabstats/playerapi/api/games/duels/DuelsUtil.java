@@ -2,7 +2,11 @@ package club.maxstats.tabstats.playerapi.api.games.duels;
 
 import club.maxstats.tabstats.playerapi.api.games.HGameBase;
 import club.maxstats.tabstats.playerapi.api.stats.StatInt;
+import club.maxstats.tabstats.playerapi.api.stats.StatString;
 import club.maxstats.tabstats.util.ChatColor;
+import org.apache.commons.lang3.text.WordUtils;
+
+import java.util.Locale;
 
 public abstract class DuelsUtil extends HGameBase {
     public DuelsUtil(String playerName, String playerUUID) {
@@ -139,5 +143,64 @@ public abstract class DuelsUtil extends HGameBase {
         } else {
             return ChatColor.GRAY;
         }
+    }
+
+    public String getTitleColor(String title) {
+        title = title.toUpperCase();
+        if (title.contains("ROOKIE")) {
+            return ChatColor.GRAY.toString();
+        } else if (title.contains("IRON")) {
+            return ChatColor.WHITE.toString();
+        } else if (title.contains("GOLD")) {
+            return ChatColor.GOLD.toString();
+        } else if (title.contains("DIAMOND")) {
+            return ChatColor.DARK_AQUA.toString();
+        } else if (title.contains("MASTER")) {
+            return ChatColor.DARK_GREEN.toString();
+        } else if (title.contains("LEGEND")) {
+            return ChatColor.DARK_RED + ChatColor.BOLD.toString();
+        } else if (title.contains("GRANDMASTER")) {
+            return ChatColor.YELLOW + ChatColor.BOLD.toString();
+        } else if (title.contains("GODLIKE")) {
+            return ChatColor.DARK_PURPLE + ChatColor.BOLD.toString();
+        } else if (title.contains("WORLD ELITE")) {
+            return ChatColor.AQUA.toString();
+        } else if (title.contains("WORLD MASTER")) {
+            return ChatColor.LIGHT_PURPLE.toString();
+        } else if (title.contains("WORLD'S BEST")) {
+            return ChatColor.GOLD.toString();
+        } else {
+            return ChatColor.GRAY.toString();
+        }
+    }
+
+    public String getFormattedTitle(Duels duels) {
+        String title = ((StatString)duels.title).getValue();
+        String formattedTitle = title.replace("_", " ").replace("Cosmetictitle", "");
+
+        if (this.isPrestigeTitle(title)) {
+            DuelsModes duelMode = DuelsModes.valueOf(title.replace(" ", ""));
+            String gamemodeName = duelMode.getName();
+            String gamemodeJsonName = duelMode.getJsonName();
+
+            /* calculate wins */
+            int gamemodeWins = duels.duelJson.get(gamemodeJsonName + "_duel_wins").getAsInt();
+            if (gamemodeWins < 100) {
+                /* rookie I think? idfk */
+            } else if (gamemodeWins < 250) {
+                /* I think iron? */
+            } else if (gamemodeWins < 500) {
+                /* gold! */
+            } else {
+                /* world's best */
+            }
+        }
+
+        return WordUtils.capitalize(formattedTitle.trim());
+    }
+
+    private boolean isPrestigeTitle(String title) {
+        title = title.toUpperCase();
+        return title.contains("ROOKIE") || title.contains("IRON") || title.contains("GOLD") || title.contains("DIAMOND") || title.contains("MASTER") || title.contains("LEGEND") || title.contains("GRANDMASTER") || title.contains("GODLIKE") || title.contains("WORLD ELITE") || title.contains("WORLD MASTER") || title.contains("WORLD'S BEST");
     }
 }

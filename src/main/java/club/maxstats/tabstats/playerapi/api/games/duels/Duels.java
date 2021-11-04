@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Duels extends DuelsUtil {
-    private JsonObject DuelsJson;
+    public JsonObject duelJson;
     private final JsonObject wholeObject;
     private List<Stat> statList;
     private final List<Stat> formattedStatList;
-    public Stat winstreak, bestWinstreak, wins, losses, kills;
+    public Stat title, winstreak, bestWinstreak, wins, losses, kills;
 
     public Duels(String playerName, String playerUUID, JsonObject wholeObject) {
         super(playerName, playerUUID);
@@ -27,11 +27,12 @@ public class Duels extends DuelsUtil {
 
         if (setData(HypixelGames.DUELS)) {
             this.statList = setStats(
-                    this.winstreak = new StatInt("Winstreak", "current_winstreak", this.DuelsJson),
-                    this.bestWinstreak = new StatInt("Best Winstreak", "best_overall_winstreak", this.DuelsJson),
-                    this.wins = new StatInt("Wins", "wins", this.DuelsJson),
-                    this.losses = new StatInt("Losses", "losses", this.DuelsJson),
-                    this.kills = new StatInt("Kills", "kills", this.DuelsJson));
+                    this.title = new StatString("Title", "active_cosmetictitle", this.duelJson),
+                    this.winstreak = new StatInt("Winstreak", "current_winstreak", this.duelJson),
+                    this.bestWinstreak = new StatInt("Best Winstreak", "best_overall_winstreak", this.duelJson),
+                    this.wins = new StatInt("Wins", "wins", this.duelJson),
+                    this.losses = new StatInt("Losses", "losses", this.duelJson),
+                    this.kills = new StatInt("Kills", "kills", this.duelJson));
         } else {
             this.formattedStatList.add(new StatString("Wins", ChatColor.RED + "NICKED"));
         }
@@ -46,7 +47,7 @@ public class Duels extends DuelsUtil {
             JsonObject obj = getGameData(wholeObject, game);
             if (!this.isNicked) {
                 this.hasPlayed = true;
-                this.DuelsJson = obj;
+                this.duelJson = obj;
                 return true;
             }
             return false;
@@ -80,7 +81,12 @@ public class Duels extends DuelsUtil {
     /* retrieves the formatted stat list */
     @Override
     public List<Stat> getFormattedStatList() {
-        return this.formattedStatList;
+        List<Stat> statList = new ArrayList<>(this.formattedStatList);
+        StatString title = new StatString("TITLE              ");
+        title.setValue(this.getTitleColor(((StatString)this.title).getValue()) + this.getFormattedTitle(this));
+        statList.add(title);
+
+        return statList;
     }
 
     /* sets the formatted stat list when the player is first grabbed */
