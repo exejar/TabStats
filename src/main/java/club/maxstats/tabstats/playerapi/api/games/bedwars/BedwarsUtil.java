@@ -5,6 +5,8 @@ import club.maxstats.tabstats.playerapi.api.stats.StatInt;
 import club.maxstats.tabstats.util.ChatColor;
 
 public abstract class BedwarsUtil extends HGameBase {
+    /* index of starWave */
+    long starWave = 0;
     public BedwarsUtil(String playerName, String playerUUID) {
         super(playerName, playerUUID);
     }
@@ -136,13 +138,13 @@ public abstract class BedwarsUtil extends HGameBase {
             return getStarColor(star) + starString + "\u272B";
         } else {
             /* if it doesn't meet any requirements, just use normal rainbow colors and star unicode */
-            ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};;
+            ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};
             String starUnicode = "\u272B";
 
             /* prestige stars */
             if (star < 2000) {
                 starUnicode = "\u272A";
-                if (star < 1200) {
+                if (star < 1200 && star >= 1100) {
                     colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY};
                 }
             } else if (star < 3000) {
@@ -150,7 +152,15 @@ public abstract class BedwarsUtil extends HGameBase {
                 colors = new ChatColor[]{ChatColor.RED, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE};
             }
 
-            return colors[0].toString() + starString.charAt(0) + colors[1].toString() + starString.charAt(1) + colors[2].toString() + starString.charAt(2) + colors[3].toString() + starString.charAt(3) + colors[4].toString() + starUnicode;
+            this.starWave = (long)((System.currentTimeMillis() % 1000L / 1000.0F) * 5);
+
+            System.out.println((int)(starWave + 0) % 4);
+            System.out.println((int)(starWave + 1) % 4);
+            System.out.println((int)(starWave + 2) % 4);
+            System.out.println((int)(starWave + 3) % 4);
+            System.out.println((int)(starWave + 4) % 4);
+
+            return colors[(int)starWave].toString() + starString.charAt(0) + colors[(int)(starWave + 1) % 5].toString() + starString.charAt(1) + colors[(int)(starWave + 2) % 5].toString() + starString.charAt(2) + colors[(int)(starWave + 3) % 5].toString() + starString.charAt(3) + colors[(int)(starWave + 4) % 5].toString() + starUnicode;
         }
     }
 

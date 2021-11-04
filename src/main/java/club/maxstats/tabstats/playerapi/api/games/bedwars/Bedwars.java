@@ -94,17 +94,19 @@ public class Bedwars extends BedwarsUtil {
     /* retrieves the formatted stat list */
     @Override
     public List<Stat> getFormattedStatList() {
-        return this.formattedStatList;
+
+
+        List<Stat> returnList = new ArrayList<>(this.formattedStatList);
+        StatString star = new StatString("Star");
+        star.setValue(this.getStarWithColor(((StatInt)this.star).getValue()));
+        returnList.add(0, star);
+        return returnList;
     }
 
     /* sets the formatted stat list when the player is first grabbed */
     /* only set a single time */
     @Override
     public void setFormattedStatList() {
-        StatString star = new StatString("Star");
-        star.setValue(this.getStarWithColor(((StatInt)this.star).getValue()));
-        this.formattedStatList.add(star);
-
         StatString ws = new StatString("WS");
         ws.setValue(this.getWSColor(((StatInt)this.winstreak).getValue()).toString() + ((StatInt)this.winstreak).getValue());
         this.formattedStatList.add(ws);
