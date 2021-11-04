@@ -17,19 +17,19 @@ public abstract class BedwarsUtil extends HGameBase {
     // Bedwars class is how I handle all the stats that are grabbed, you can also modify which stats are grabbed and add them to the stat list
 
     public ChatColor getFkdrColor(double fkdr) {
-        if (fkdr < 5) {
+        if (fkdr < 1.5) {
             return ChatColor.GRAY;
-        } else if (fkdr < 10) {
+        } else if (fkdr < 3.5) {
             return ChatColor.WHITE;
-        } else if (fkdr < 20) {
+        } else if (fkdr < 5) {
             return ChatColor.GOLD;
-        } else if (fkdr < 35) {
+        } else if (fkdr < 10) {
             return ChatColor.DARK_GREEN;
-        } else if (fkdr < 60) {
+        } else if (fkdr < 20) {
             return ChatColor.RED;
-        } else if (fkdr < 100) {
+        } else if (fkdr < 50) {
             return ChatColor.DARK_RED;
-        } else if (fkdr < 500) {
+        } else if (fkdr < 100) {
             return ChatColor.LIGHT_PURPLE;
         } else {
             return ChatColor.DARK_PURPLE;
@@ -41,13 +41,13 @@ public abstract class BedwarsUtil extends HGameBase {
     }
 
     public ChatColor getWlrColor(double wlr) {
-        if (wlr < 2) {
+        if (wlr < 1) {
             return ChatColor.GRAY;
-        } else if (wlr < 4) {
+        } else if (wlr < 2) {
             return ChatColor.WHITE;
-        } else if (wlr < 6) {
+        } else if (wlr < 3) {
             return ChatColor.GOLD;
-        } else if (wlr < 7) {
+        } else if (wlr < 5) {
             return ChatColor.DARK_GREEN;
         } else if (wlr < 10) {
             return ChatColor.RED;
@@ -65,13 +65,13 @@ public abstract class BedwarsUtil extends HGameBase {
     }
 
     public ChatColor getBblrColor(double bblr) {
-        if (bblr < 2) {
+        if (bblr < 1.5) {
             return ChatColor.GRAY;
-        } else if (bblr < 4) {
+        } else if (bblr < 2.5) {
             return ChatColor.WHITE;
-        } else if (bblr < 6) {
+        } else if (bblr < 5) {
             return ChatColor.GOLD;
-        } else if (bblr < 7) {
+        } else if (bblr < 7.5) {
             return ChatColor.DARK_GREEN;
         } else if (bblr < 10) {
             return ChatColor.RED;
@@ -85,19 +85,19 @@ public abstract class BedwarsUtil extends HGameBase {
     }
 
     public ChatColor getWSColor(double ws) {
-        if (ws < 50) {
+        if (ws < 5) {
             return ChatColor.GRAY;
-        } else if (ws < 200) {
+        } else if (ws < 10) {
             return ChatColor.WHITE;
-        } else if (ws < 350) {
+        } else if (ws < 20) {
             return ChatColor.GOLD;
-        } else if (ws < 500) {
+        } else if (ws < 35) {
             return ChatColor.DARK_GREEN;
-        } else if (ws < 650) {
+        } else if (ws < 50) {
             return ChatColor.RED;
-        } else if (ws < 800) {
+        } else if (ws < 75) {
             return ChatColor.DARK_RED;
-        } else if (ws < 1000) {
+        } else if (ws < 100) {
             return ChatColor.LIGHT_PURPLE;
         } else {
             return ChatColor.DARK_PURPLE;
