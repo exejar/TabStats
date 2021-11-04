@@ -21,7 +21,7 @@ public enum ChatColor {
     LIGHT_PURPLE('d', -43521),
     YELLOW('e', -171),
     WHITE('f', -1),
-    MAGIC('k', 0, true),
+    OBFUSCATE('k', 0, true),
     BOLD('l', 0, true),
     STRIKETHROUGH('m', 0, true),
     UNDERLINE('n', 0, true),
