@@ -30,10 +30,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
+/* fair warning, this class is heavily "documented" (very poorly) for new programmers to understand how it works */
 public class StatsTab extends GuiPlayerTabOverlay {
     private static final Ordering<NetworkPlayerInfo> field_175252_a = Ordering.from(new StatsTab.PlayerComparator());
     private final Minecraft mc;
@@ -61,7 +64,14 @@ public class StatsTab extends GuiPlayerTabOverlay {
         int nameWidth = 0;
         /* width of the player's objective string */
         int objectiveWidth = 0;
+        /* retrieve scaled resolution for accurate dimensions */
+        ScaledResolution scaledRes = new ScaledResolution(this.mc);
+        /* where the render should start on x plane */
+        int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
+        /* where the render should start on y plane */
+        int startingY = 35;
 
+        /* this is kind of useless...as nameWidth and objectiveWidth aren't used */
         for (NetworkPlayerInfo playerInfo : playerList) {
             int strWidth = this.mc.fontRendererObj.getStringWidth(this.getPlayerName(playerInfo));
             nameWidth = Math.max(nameWidth, strWidth);
@@ -72,22 +82,36 @@ public class StatsTab extends GuiPlayerTabOverlay {
             }
         }
 
+        /* initialize objectiveName outside of the below if block, so we can render it after the background */
+        String objectiveName = "";
+        /* meant for initializing the render of score objective */
+        if (scoreObjectiveIn != null) {
+            /* this is usually the raw name meant for internal usage */
+            String objectiveRawName = WordUtils.capitalize(scoreObjectiveIn.getName().replace("_", " "));
+
+            /* this is usually the formatted name meant for display */
+            String objectiveDisplayname = WordUtils.capitalize(scoreObjectiveIn.getDisplayName().replace("_", ""));
+
+            /* move starting X back based on length of rendered score objective */
+            startingX -= (10 + this.mc.fontRendererObj.getStringWidth(objectiveDisplayname));
+            /* you can change this value to objectiveRawName, but I like using the displayname */
+            objectiveName = objectiveDisplayname;
+        }
+
         /* only grabs downwards of 80 players */
         playerList = playerList.subList(0, Math.min(playerList.size(), 80));
         int playerListSize = playerList.size();
 
         /* the entire tab background */
-        ScaledResolution scaledRes = new ScaledResolution(this.mc);
-        int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
-        int startingY = 35;
-        drawRect(startingX - this.backgroundBorderSize, startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
+        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
 
         /* draw an entry rect for the stat name title */
         drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, 553648127);
 
-        /* Start with drawing the name, as this will always be here and isn't inside of the Stat List */
+        /* Start with drawing the name and objective, as they will always be here and aren't inside of the Stat List */
         int statXSpacer = startingX + headSize + 2;
         this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+        this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
         /* adds 140 pixels to statXSpacer since name's are way longer than stats */
         statXSpacer += 140;
@@ -177,19 +201,9 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
                 /* if player isn't a spectator and scoreobjective isn't null, render their score objective */
-                int spacer;
-                if (scoreObjectiveIn != null) {
-                    if (scoreObjectiveIn.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS) {
-                        spacer = 90;
-                    } else {
-                        spacer = objectiveWidth;
-                    }
-                } else {
-                    spacer = 0;
-                }
 
-//                System.out.println(scoreObjectiveIn.getDisplayName() + " - " + scoreObjectiveIn.getName() + " - " + scoreObjectiveIn.getCriteria());
-                this.drawScoreboardValues(scoreObjectiveIn, ySpacer + (this.entryHeight / 2 - 4), gameProfile.getName(), 800, 300, playerInfo);
+                /* not really sure how all objectives are drawn, but I understand HP and that's usually what Hypixel uses lol */
+                this.drawScoreboardValues(scoreObjectiveIn, ySpacer, gameProfile.getName(), xSpacer, startingX - 5, playerInfo);
             }
 
             /* spaces each entry by the specified pixels */
@@ -267,8 +281,11 @@ public class StatsTab extends GuiPlayerTabOverlay {
                 }
             }
         } else {
+            /* This is where Hypixel usually has Client draw Scoreboard Stats */
+
             String s1 = EnumChatFormatting.YELLOW + "" + i;
-            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y, 16777215);
+            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y + (this.entryHeight / 2 - 4), 16777215);
+//            drawRect(endX - this.mc.fontRendererObj.getStringWidth(objectiveIn.getDisplayName()), y, endX, y + this.entryHeight, 553648127);
         }
     }
 
