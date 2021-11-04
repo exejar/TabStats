@@ -1,6 +1,7 @@
 package club.maxstats.tabstats;
 
 import club.maxstats.tabstats.config.ModConfig;
+import club.maxstats.tabstats.listener.ApiKeyListener;
 import club.maxstats.tabstats.listener.GameOverlayListener;
 import club.maxstats.tabstats.playerapi.WorldLoader;
 import club.maxstats.tabstats.util.References;
@@ -30,7 +31,7 @@ public class TabStats {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         this.statWorld = new WorldLoader();
-        this.registerListeners(statWorld, new GameOverlayListener());
+        this.registerListeners(statWorld, new GameOverlayListener(), new ApiKeyListener());
     }
 
     /* Post Initialization Event, Called after the initialization of Forge */
