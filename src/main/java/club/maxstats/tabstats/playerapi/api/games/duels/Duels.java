@@ -16,7 +16,7 @@ public class Duels extends DuelsUtil {
     private final JsonObject wholeObject;
     private List<Stat> statList;
     private final List<Stat> formattedStatList;
-    public Stat winstreak, wins, losses, kills;
+    public Stat winstreak, bestWinstreak, wins, losses, kills;
 
     public Duels(String playerName, String playerUUID, JsonObject wholeObject) {
         super(playerName, playerUUID);
@@ -27,10 +27,8 @@ public class Duels extends DuelsUtil {
 
         if (setData(HypixelGames.DUELS)) {
             this.statList = setStats(
-                    // "Duels_level" is the Api name of the star.
-                    // If you wish to add any other stats, you add them like this, statName is whatever name you want to call it, then jsonName is the name of the stat in the API
-                    // and the 3rd parameter is the json object in which this api stat resides. So winstreak is inside of the Duels json object along with all the other Duels
                     this.winstreak = new StatInt("Winstreak", "current_winstreak", this.DuelsJson),
+                    this.bestWinstreak = new StatInt("Best Winstreak", "best_overall_winstreak", this.DuelsJson),
                     this.wins = new StatInt("Wins", "wins", this.DuelsJson),
                     this.losses = new StatInt("Losses", "losses", this.DuelsJson),
                     this.kills = new StatInt("Kills", "kills", this.DuelsJson));
@@ -92,6 +90,10 @@ public class Duels extends DuelsUtil {
         StatString ws = new StatString("WS");
         ws.setValue(this.getWSColor(((StatInt)this.winstreak).getValue()).toString() + ((StatInt)this.winstreak).getValue());
         this.formattedStatList.add(ws);
+
+        StatString bws = new StatString("BWS");
+        bws.setValue(this.getBestWSColor(((StatInt)this.bestWinstreak).getValue()).toString() + ((StatInt)this.bestWinstreak).getValue());
+        this.formattedStatList.add(bws);
 
         StatString ks = new StatString("KILLS");
         ks.setValue(this.getKillsColor(((StatInt)this.kills).getValue()).toString() + ((StatInt)this.kills).getValue());
