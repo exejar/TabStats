@@ -84,15 +84,15 @@ public class StatWorld {
 
                 if (wholeObject != null) {
                     // initialize which games you want the player to be created with
-                    Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
-                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
-
-                    hPlayer.addGames(bw, duels);
-
                     JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
 
                     hPlayer.setPlayerRank(playerObject);
                     hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
+
+                    Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
+                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
+
+                    hPlayer.addGames(bw, duels);
                 }
             }
 
