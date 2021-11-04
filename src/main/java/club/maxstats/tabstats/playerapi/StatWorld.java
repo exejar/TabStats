@@ -2,6 +2,7 @@ package club.maxstats.tabstats.playerapi;
 
 import club.maxstats.tabstats.playerapi.api.HypixelAPI;
 import club.maxstats.tabstats.playerapi.api.games.bedwars.Bedwars;
+import club.maxstats.tabstats.playerapi.api.games.duels.Duels;
 import club.maxstats.tabstats.playerapi.exception.ApiRequestException;
 import club.maxstats.tabstats.playerapi.exception.BadJsonException;
 import club.maxstats.tabstats.playerapi.exception.InvalidKeyException;
@@ -71,6 +72,7 @@ public class StatWorld {
                 JsonObject wholeObject;
 
                 try {
+                    // retrieves the entire json object for the player and stores it in wholeObject
                     wholeObject = new HypixelAPI().getWholeObject(playerUUID.replace("-", ""));
                 } catch (PlayerNullException | ApiRequestException | InvalidKeyException | BadJsonException ex) {
                     this.addPlayer(uuid, hPlayer);
@@ -81,10 +83,12 @@ public class StatWorld {
                 }
 
                 if (wholeObject != null) {
+                    // initialize which games you want the player to be created with
                     Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
-//                    Skywars sw = new Skywars(playerName, playerUUID, wholeObject);
+                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
 
-                    hPlayer.addGames(bw);
+
+                    hPlayer.addGames(bw, duels);
                     hPlayer.setPlayerRank(wholeObject.get("player").getAsJsonObject());
                 }
             }
