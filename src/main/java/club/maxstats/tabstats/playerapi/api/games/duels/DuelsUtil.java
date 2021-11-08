@@ -185,14 +185,30 @@ public abstract class DuelsUtil extends HGameBase {
 
             /* calculate wins */
             int gamemodeWins = duels.duelJson.get(gamemodeJsonName + "_duel_wins").getAsInt();
-            if (gamemodeWins < 100) {
-                /* rookie I think? idfk */
-            } else if (gamemodeWins < 250) {
-                /* I think iron? */
-            } else if (gamemodeWins < 500) {
-                /* gold! */
+            if (gamemodeWins == 100000) {
+                return gamemodeName + " World's Best";
+            } else if (gamemodeWins >= 50000) {
+                return gamemodeName + " World Master";
+            } else if (gamemodeWins >= 25000) {
+                return gamemodeName + " World Elite";
+            } else if (gamemodeWins >= 10000) {
+                return gamemodeName + " Godlike";
+            } else if (gamemodeWins >= 5000) {
+                return gamemodeName + " Grandmaster";
+            } else if (gamemodeWins >= 2000) {
+                return gamemodeName + " Legend";
+            } else if (gamemodeWins >= 1000) {
+                return gamemodeName + " Master";
+            } else if (gamemodeWins >= 500) {
+                return gamemodeName + " Diamond";
+            } else if (gamemodeWins >= 250) {
+                return gamemodeName + " Gold";
+            } else if (gamemodeWins >= 100) {
+                return gamemodeName + " Iron";
+            } else if (gamemodeWins >= 50) {
+                return gamemodeName + " Rookie";
             } else {
-                /* world's best */
+                return "NONE";
             }
         }
 
