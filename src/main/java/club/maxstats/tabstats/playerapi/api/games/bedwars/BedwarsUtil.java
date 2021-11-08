@@ -133,20 +133,21 @@ public abstract class BedwarsUtil extends HGameBase {
 
     /* should be the actual method used when displaying stars */
     public String getStarWithColor(int star) {
-        star = 2169;
         /* how many colors there are in the array */
-        int colorAmount = 5;
+        int colorAmount;
         String starString = Integer.toString(star);
         if (star < 1000) {
             return getStarColor(star) + starString + "\u272B";
+
+        /* prestige stars */
         } else {
             /* if it doesn't meet any requirements, just use normal rainbow colors and star unicode */
             ChatColor[] colors = new ChatColor[]{ChatColor.RED, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.GREEN, ChatColor.AQUA, ChatColor.LIGHT_PURPLE, ChatColor.DARK_PURPLE};
             String starUnicode = "\u272B";
-            /* rainbow has 7 colors */
+            /* rainbow prestige has 7 colors */
             colorAmount = 7;
 
-            /* prestige stars */
+            /* 1,000-1,999 stars */
             if (star >= 1100) {
                 if (star < 2000) {
                     starUnicode = "\u272A";
@@ -157,20 +158,58 @@ public abstract class BedwarsUtil extends HGameBase {
                         colors = new ChatColor[]{ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD};
                     } else if (star < 1400) {
                         colors = new ChatColor[]{ChatColor.AQUA, ChatColor.AQUA, ChatColor.AQUA, ChatColor.AQUA, ChatColor.DARK_AQUA};
+                    } else if (star < 1500) {
+                        colors = new ChatColor[]{ChatColor.GREEN, ChatColor.GREEN, ChatColor.GREEN, ChatColor.GREEN, ChatColor.DARK_GREEN};
+                    } else if (star < 1600) {
+                        colors = new ChatColor[]{ChatColor.DARK_AQUA, ChatColor.DARK_AQUA, ChatColor.DARK_AQUA, ChatColor.DARK_AQUA, ChatColor.BLUE};
+                    } else if (star < 1700) {
+                        colors = new ChatColor[]{ChatColor.RED, ChatColor.RED, ChatColor.RED, ChatColor.RED, ChatColor.DARK_RED};
+                    } else if (star < 1800) {
+                        colors = new ChatColor[]{ChatColor.LIGHT_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.DARK_PURPLE};
+                    } else if (star < 1900) {
+                        colors = new ChatColor[]{ChatColor.BLUE, ChatColor.BLUE, ChatColor.BLUE, ChatColor.BLUE, ChatColor.DARK_BLUE};
+                    } else {
+                        colors = new ChatColor[]{ChatColor.DARK_PURPLE, ChatColor.DARK_PURPLE, ChatColor.DARK_PURPLE, ChatColor.DARK_PURPLE, ChatColor.DARK_GRAY};
                     }
-                } else if (star < 3000) {
+                /* 2,000+ stars */
+                } else {
                     starUnicode = "\u269D";
                     colorAmount = 6;
                     if (star < 2100) {
-                        colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.GOLD};
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.DARK_GRAY, ChatColor.GRAY, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY, ChatColor.GRAY, ChatColor.DARK_GRAY};
                     } else if (star < 2200) {
+                        colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.GOLD};
+                    } else if (star < 2300) {
                         colorAmount = 7;
                         colors = new ChatColor[]{ChatColor.GOLD, ChatColor.GOLD, ChatColor.WHITE, ChatColor.WHITE, ChatColor.AQUA, ChatColor.DARK_AQUA, ChatColor.DARK_AQUA};
+                    } else if (star < 2400) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.DARK_PURPLE, ChatColor.DARK_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.GOLD, ChatColor.YELLOW, ChatColor.YELLOW};
+                    } else if (star < 2500) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.AQUA, ChatColor.AQUA, ChatColor.WHITE, ChatColor.WHITE, ChatColor.GRAY, ChatColor.GRAY, ChatColor.DARK_GRAY};
+                    } else if (star < 2600) {
+                        colors = new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.GREEN, ChatColor.GREEN, ChatColor.DARK_GREEN, ChatColor.DARK_GREEN};
+                    } else if (star < 2700) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.DARK_RED, ChatColor.DARK_RED, ChatColor.RED, ChatColor.RED, ChatColor.LIGHT_PURPLE, ChatColor.LIGHT_PURPLE, ChatColor.DARK_PURPLE};
+                    } else if (star < 2800) {
+                        colors = new ChatColor[]{ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.WHITE, ChatColor.WHITE, ChatColor.DARK_GRAY, ChatColor.DARK_GRAY};
+                    } else if (star < 2900) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.GREEN, ChatColor.GREEN, ChatColor.DARK_GREEN, ChatColor.DARK_GREEN, ChatColor.GOLD, ChatColor.GOLD, ChatColor.YELLOW};
+                    } else if (star < 3000) {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.AQUA, ChatColor.AQUA, ChatColor.DARK_AQUA, ChatColor.DARK_AQUA, ChatColor.BLUE, ChatColor.BLUE, ChatColor.DARK_BLUE};
+                    } else {
+                        colorAmount = 7;
+                        colors = new ChatColor[]{ChatColor.YELLOW, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.GOLD, ChatColor.RED, ChatColor.RED, ChatColor.DARK_RED};
                     }
                 }
             }
 
-            this.starWave = (long)((System.currentTimeMillis() % 550L / 550.0F) * colorAmount);
+            this.starWave = (long)((System.currentTimeMillis() % 850L / 850.0F) * colorAmount);
 
             return colors[(int)(this.starWave + 4) % colorAmount].toString() + starString.charAt(0) + colors[(int)(this.starWave + 3) % colorAmount].toString() + starString.charAt(1) + colors[(int)(this.starWave + 2) % colorAmount].toString() + starString.charAt(2) + colors[(int)(this.starWave + 1) % colorAmount].toString() + starString.charAt(3) + colors[(int)(this.starWave + 0) % colorAmount].toString() + starUnicode;
         }
