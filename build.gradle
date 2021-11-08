@@ -62,7 +62,13 @@ build {
     clean
     build
     shadowJar
+    reobf
 }
 
-runClient {
+reobf {
+    shadowJar {
+        mappingType = 'SEARGE'
+    }
 }
+
+build.dependsOn shadowJar
