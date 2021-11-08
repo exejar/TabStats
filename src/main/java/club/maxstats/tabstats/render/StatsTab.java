@@ -113,8 +113,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
         this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
         this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
-        /* adds 140 pixels to statXSpacer since name's are way longer than stats */
-        statXSpacer += 140;
+        /* adds longest name possible in pixels to statXSpacer since name's are way longer than stats */
+        statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW") + 10;
 
         /* loops through all the stats that should be displayed and renders their stat titles */
         for (Stat stat : gameStatTitleList) {
@@ -171,7 +171,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     /* gets bedwars if the gamemode is not a game added to the hplayer's game list, otherwise, grab the game stats based on the scoreboard */
                     List<Stat> statList = hPlayer.getFormattedGameStats(gamemode) == null ? hPlayer.getFormattedGameStats("BEDWARS") : hPlayer.getFormattedGameStats(gamemode);
                     /* start at the first stat */
-                    int valueXSpacer = startingX + 140 + headSize + 2;
+                    int valueXSpacer = startingX + this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW") + 10 + headSize + 2;
 
                     for (Stat stat : statList) {
                         String statValue = "";
