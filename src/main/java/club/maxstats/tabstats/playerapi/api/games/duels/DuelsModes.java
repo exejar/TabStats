@@ -1,146 +1,55 @@
 package club.maxstats.tabstats.playerapi.api.games.duels;
 
+/* custom enum for duels api retrieval because the api is embarrassing, and probably made by a 10 year old. */
 public enum DuelsModes {
-    /* UHC */
-    rookie_uhc("rookie_uhc", "uhc"),
-    iron_uhc("iron_uhc", "uhc"),
-    gold_uhc("gold_uhc", "uhc"),
-    diamond_uhc("diamond_uhc", "uhc"),
-    master_uhc("master_uhc", "uhc"),
-    legend_uhc("legend_uhc", "uhc"),
-    grandmaster_uhc("grandmaster_uhc", "uhc"),
-    godlike_uhc("godlike_uhc", "uhc"),
-    world_elite_uhc("world_elite_uhc", "uhc"),
-    world_master_uhc("world_master_uhc", "uhc"),
-    /* Sumo */
-    rookie_sumo("rookie_sumo", "sumo"),
-    iron_sumo("iron_sumo", "sumo"),
-    gold_sumo("gold_sumo", "sumo"),
-    diamond_sumo("diamond_sumo", "sumo"),
-    master_sumo("master_sumo", "sumo"),
-    legend_sumo("legend_sumo", "sumo"),
-    grandmaster_sumo("grandmaster_sumo", "sumo"),
-    godlike_sumo("godlike_sumo", "sumo"),
-    world_elite_sumo("world_elite_sumo", "sumo"),
-    world_master_sumo("world_master_sumo", "sumo"),
-    /* Classic */
-    rookie_classic("rookie_classic", "classic"),
-    iron_classic("iron_classic", "classic"),
-    gold_classic("gold_classic", "classic"),
-    diamond_classic("diamond_classic", "classic"),
-    master_classic("master_classic", "classic"),
-    legend_classic("legend_classic", "classic"),
-    grandmaster_classic("grandmaster_classic", "classic"),
-    godlike_classic("godlike_classic", "classic"),
-    world_elite_classic("world_elite_classic", "classic"),
-    world_master_classic("world_master_classic", "classic"),
-    /* Combo */
-    rookie_combo("rookie_combo", "combo"),
-    iron_combo("iron_combo", "combo"),
-    gold_combo("gold_combo", "combo"),
-    diamond_combo("diamond_combo", "combo"),
-    master_combo("master_combo", "combo"),
-    legend_combo("legend_combo", "combo"),
-    grandmaster_combo("grandmaster_combo", "combo"),
-    godlike_combo("godlike_combo", "combo"),
-    world_elite_combo("world_elite_combo", "combo"),
-    world_master_combo("world_master_combo", "combo"),
-    /* Bow */
-    rookie_bow("rookie_bow", "bow"),
-    iron_bow("iron_bow", "bow"),
-    gold_bow("gold_bow", "bow"),
-    diamond_bow("diamond_bow", "bow"),
-    master_bow("master_bow", "bow"),
-    legend_bow("legend_bow", "bow"),
-    grandmaster_bow("grandmaster_bow", "bow"),
-    godlike_bow("godlike_bow", "bow"),
-    world_elite_bow("world_elite_bow", "bow"),
-    world_master_bow("world_master_bow", "bow"),
-    /* Skywars */
-    rookie_skywars("rookie_skywars", "sw"),
-    iron_skywars("iron_skywars", "sw"),
-    gold_skywars("gold_skywars", "sw"),
-    diamond_skywars("diamond_skywars", "sw"),
-    master_skywars("master_skywars", "sw"),
-    legend_skywars("legend_skywars", "sw"),
-    grandmaster_skywars("grandmaster_skywars", "sw"),
-    godlike_skywars("godlike_skywars", "sw"),
-    world_elite_skywars("world_elite_skywars", "sw"),
-    world_master_skywars("world_master_skywars", "sw"),
-    /* Blitz */
-    rookie_blitz("rookie_blitz", "blitz"),
-    iron_blitz("iron_blitz", "blitz"),
-    gold_blitz("gold_blitz", "blitz"),
-    diamond_blitz("diamond_blitz", "blitz"),
-    master_blitz("master_blitz", "blitz"),
-    legend_blitz("legend_blitz", "blitz"),
-    grandmaster_blitz("grandmaster_blitz", "blitz"),
-    godlike_blitz("godlike_blitz", "blitz"),
-    world_elite_blitz("world_elite_blitz", "blitz"),
-    world_master_blitz("world_master_blitz", "blitz"),
-    /* MegaWalls */
-    rookie_megawalls("rookie_megawalls", "mw"),
-    iron_megawalls("iron_megawalls", "mw"),
-    gold_megawalls("gold_megawalls", "mw"),
-    diamond_megawalls("diamond_megawalls", "mw"),
-    master_megawalls("master_megawalls", "mw"),
-    legend_megawalls("legend_megawalls", "mw"),
-    grandmaster_megawalls("grandmaster_megawalls", "mw"),
-    godlike_megawalls("godlike_megawalls", "mw"),
-    world_elite_megawalls("world_elite_megawalls", "mw"),
-    world_master_megawalls("world_master_megawalls", "mw"),
-    /* BowSpleef / Tnt Spleef */
-    rookie_bowspleef("rookie_bowspleef", "bowspleef"),
-    iron_bowspleef("iron_bowspleef", "bowspleef"),
-    gold_bowspleef("gold_bowspleef", "bowspleef"),
-    diamond_bowspleef("diamond_bowspleef", "bowspleef"),
-    master_bowspleef("master_bowspleef", "bowspleef"),
-    legend_bowspleef("legend_bowspleef", "bowspleef"),
-    grandmaster_bowspleef("grandmaster_bowspleef", "bowspleef"),
-    godlike_bowspleef("godlike_bowspleef", "bowspleef"),
-    world_elite_bowspleef("world_elite_bowspleef", "bowspleef"),
-    world_master_bowspleef("world_master_bowspleef", "bowspleef"),
-    /* Bridge */
-    rookie_bridge("rookie_bridge", "bridge"),
-    iron_bridge("iron_bridge", "bridge"),
-    gold_bridge("gold_bridge", "bridge"),
-    diamond_bridge("diamond_bridge", "bridge"),
-    master_bridge("master_bridge", "bridge"),
-    legend_bridge("legend_bridge", "bridge"),
-    grandmaster_bridge("grandmaster_bridge", "bridge"),
-    godlike_bridge("godlike_bridge", "bridge"),
-    world_elite_bridge("world_elite_bridge", "bridge"),
-    world_master_bridge("world_master_bridge", "bridge"),
-    /* Boxing */
-    rookie_boxing("rookie_boxing", "boxing"),
-    iron_boxing("iron_boxing", "boxing"),
-    gold_boxing("gold_boxing", "boxing"),
-    diamond_boxing("diamond_boxing", "boxing"),
-    master_boxing("master_boxing", "boxing"),
-    legend_boxing("legend_boxing", "boxing"),
-    grandmaster_boxing("grandmaster_boxing", "boxing"),
-    godlike_boxing("godlike_boxing", "boxing"),
-    world_elite_boxing("world_elite_boxing", "boxing"),
-    world_master_boxing("world_master_boxing", "boxing"),
-    /* No Debuff / Potion */
-    rookie_no_debuff("rookie_no_debuff", "potion"),
-    iron_no_debuff("iron_no_debuff", "potion"),
-    gold_no_debuff("gold_no_debuff", "potion"),
-    diamond_no_debuff("diamond_no_debuff", "potion"),
-    master_no_debuff("master_no_debuff", "potion"),
-    legend_no_debuff("legend_no_debuff", "potion"),
-    grandmaster_no_debuff("grandmaster_no_debuff", "potion"),
-    godlike_no_debuff("godlike_no_debuff", "potion"),
-    world_elite_no_debuff("world_elite_no_debuff", "potion"),
-    world_master_no_debuff("world_master_no_debuff", "potion");
+    ALL_MODES("Overall", "", "current_winstreak", "best_overall_winstreak", "wins", "losses", "kills", "deaths"),
+    OVERALL("Overall", "", "current_winstreak", "best_overall_winstreak", "wins", "losses", "kills", "deaths"),
+    UHC("UHC", "uhc", "current_uhc_winstreak", "best_uhc_winstreak", "uhc_duel_wins", "uhc_duel_losses", "uhc_duel_kills", "uhc_duel_deaths"),
+    NO_DEBUFF("No-Debuff", "no_debuff", "current_no_debuff_winstreak", "best_no_debuff_winstreak", "potion_duel_wins", "potion_duel_losses", "potion_duel_kills", "potion_duel_deaths"),
+    POTION("No-Debuff", "no_debuff", "current_no_debuff_winstreak", "best_no_debuff_winstreak", "potion_duel_wins", "potion_duel_losses", "potion_duel_kills", "potion_duel_deaths"),
+    SUMO("Sumo", "sumo", "current_sumo_winstreak", "best_sumo_winstreak", "sumo_duel_wins", "sumo_duel_losses", "sumo_duel_kills", "sumo_duel_deaths"),
+    CLASSIC("Classic", "classic", "current_classic_winstreak", "best_classic_winstreak", "classic_duel_wins", "classic_duel_losses", "classic_duel_kills", "classic_duel_deaths"),
+    COMBO("Combo", "combo", "current_combo_winstreak", "best_combo_winstreak", "combo_duel_wins", "combo_duel_losses", "combo_duel_kills", "combo_duel_deaths"),
+    BOW("Bow", "bow", "current_bow_winstreak", "best_bow_winstreak", "bow_duel_wins", "bow_duel_losses", "bow_duel_kills", "bow_duel_deaths"),
+    SKYWARS("Skywars", "skywars", "current_skywars_winstreak", "best_skywars_winstreak", "sw_duel_wins", "sw_duel_losses", "sw_duel_kills", "sw_duel_deaths"),
+    SW("Skywars", "skywars", "current_skywars_winstreak", "best_skywars_winstreak", "sw_duel_wins", "sw_duel_losses", "sw_duel_kills", "sw_duel_deaths"),
+    BLITZ("Blitz", "blitz", "current_blitz_winstreak", "best_blitz_winstreak", "blitz_duel_wins", "blitz_duel_losses", "blitz_duel_kills", "blitz_duel_deaths"),
+    MEGAWALLS("Mega Walls", "mega_walls", "current_mega_walls_winstreak", "best_mega_walls_winstreak", "mw_duel_wins", "mw_duel_losses",  "mw_duel_kills", "mw_duel_deaths"),
+    MEGA_WALLS("Mega Walls", "mega_walls", "current_mega_walls_winstreak", "best_mega_walls_winstreak", "mw_duel_wins", "mw_duel_losses",  "mw_duel_kills", "mw_duel_deaths"),
+    MW("Mega Walls", "mega_walls", "current_mega_walls_winstreak", "best_mega_walls_winstreak", "mw_duel_wins", "mw_duel_losses",  "mw_duel_kills", "mw_duel_deaths"),
+    BOWSPLEEF("Bow Spleef", "tnt_games", "current_tnt_games_winstreak", "best_tnt_games_winstreak", "bowspleef_duel_wins", "bowspleef_duel_losses", "bowspleef_duel_kills", "bowspleef_duel_deaths"),
+    TNT_GAMES("Bow Spleef", "tnt_games", "current_tnt_games_winstreak", "best_tnt_games_winstreak", "bowspleef_duel_wins", "bowspleef_duel_losses", "bowspleef_duel_kills", "bowspleef_duel_deaths"),
+    BRIDGE("Bridge", "bridge", "current_bridge_winstreak", "best_bridge_winstreak", "bridge_duel_wins", "bridge_duel_losses", "bridge_duel_kills", "bridge_duel_deaths"),
+    BOXING("Boxing", "boxing", "current_winstreak", "best_overall_winstreak", "boxing_duel_wins", "boxing_duel_losses", "boxing_duel_kills", "boxing_duel_deaths"),
+    OP("OP", "op", "current_op_winstreak", "best_op_winstreak", "op_duel_wins", "op_duel_losses", "op_duel_kills", "op_duel_deaths"),
+    PARKOUR("Parkour", "parkour", "current_winstreak", "best_overall_winstreak", "wins", "losses", "kills", "deaths");
 
-    String name, jsonName;
-    DuelsModes(String name, String jsonName) {
+
+    String name, titleName, wsJson, bestWsJson, winsJson, lossesJson, killsJson, deathsJson;
+    DuelsModes(String name, String titleName, String wsJson, String bestWsJson, String winsJson, String lossesJson, String killsJson, String deathsJson) {
         this.name = name;
-        this.jsonName = jsonName;
+        this.titleName = titleName;
+        this.wsJson = wsJson;
+        this.bestWsJson = bestWsJson;
+        this.winsJson = winsJson;
+        this.lossesJson = lossesJson;
+        this.killsJson = killsJson;
+        this.deathsJson = deathsJson;
     }
 
     public String getName() { return this.name; }
 
-    public String getJsonName() { return this.jsonName; }
+    public String getTitleName() { return this.titleName; }
+
+    public String getWSJson() { return this.wsJson; }
+
+    public String getBestWSJson() { return this.bestWsJson; }
+
+    public String getWinsJson() { return this.winsJson; }
+
+    public String getLossesJson() { return this.lossesJson; }
+
+    public String getKillsJson() { return this.killsJson; }
+
+    public String getDeathsJson() { return this.deathsJson; }
 }

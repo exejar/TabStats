@@ -13,10 +13,6 @@ public abstract class DuelsUtil extends HGameBase {
         super(playerName, playerUUID);
     }
 
-
-    //this is where I format all the stats and stat colors. You can modify this to your liking
-    // Bedwars class is how I handle all the stats that are grabbed, you can also modify which stats are grabbed and add them to the stat list
-
     public double getWlr(Duels duels) {
         return this.formatDouble(((StatInt)duels.wins).getValue(), ((StatInt)duels.losses).getValue());
     }
@@ -60,25 +56,7 @@ public abstract class DuelsUtil extends HGameBase {
             return ChatColor.DARK_PURPLE;
         }
     }
-    public ChatColor getBestWSColor(int bws) {
-        if (bws < 50) {
-            return ChatColor.GRAY;
-        } else if (bws < 200) {
-            return ChatColor.WHITE;
-        } else if (bws < 350) {
-            return ChatColor.GOLD;
-        } else if (bws < 500) {
-            return ChatColor.DARK_GREEN;
-        } else if (bws < 650) {
-            return ChatColor.RED;
-        } else if (bws < 800) {
-            return ChatColor.DARK_RED;
-        } else if (bws < 1000) {
-            return ChatColor.LIGHT_PURPLE;
-        } else {
-            return ChatColor.DARK_PURPLE;
-        }
-    }
+
     public ChatColor getKillsColor(int kills) {
         if (kills < 1000) {
             return ChatColor.GRAY;
@@ -100,25 +78,25 @@ public abstract class DuelsUtil extends HGameBase {
     }
 
     public ChatColor getWinsColor(int wins) {
-        if (wins < 51) {
+        if (wins < 50) {
             return ChatColor.GRAY;
-        } else if (wins < 101) {
+        } else if (wins < 100) {
             return ChatColor.WHITE;
-        } else if (wins < 251) {
+        } else if (wins < 250) {
             return ChatColor.GOLD;
-        } else if (wins < 501) {
+        } else if (wins < 500) {
             return ChatColor.DARK_AQUA;
-        } else if (wins < 1001) {
+        } else if (wins < 1000) {
             return ChatColor.GREEN;
-        } else if (wins < 2001) {
+        } else if (wins < 2000) {
             return ChatColor.DARK_RED;
-        } else if (wins < 5001) {
+        } else if (wins < 5000) {
             return ChatColor.YELLOW;
-        } else if (wins < 10001) {
+        } else if (wins < 10000) {
         return ChatColor.DARK_PURPLE;
-        } else if (wins < 25001) {
+        } else if (wins < 25000) {
             return ChatColor.AQUA;
-        } else if (wins < 50001) {
+        } else if (wins < 50000) {
             return ChatColor.LIGHT_PURPLE;
         } else {
             return ChatColor.YELLOW;
@@ -145,70 +123,61 @@ public abstract class DuelsUtil extends HGameBase {
         }
     }
 
-    public String getTitleColor(String title) {
-        title = title.toUpperCase();
-        if (title.contains("ROOKIE")) {
-            return ChatColor.GRAY.toString();
-        } else if (title.contains("IRON")) {
-            return ChatColor.WHITE.toString();
-        } else if (title.contains("GOLD")) {
-            return ChatColor.GOLD.toString();
-        } else if (title.contains("DIAMOND")) {
-            return ChatColor.DARK_AQUA.toString();
-        } else if (title.contains("MASTER")) {
-            return ChatColor.DARK_GREEN.toString();
-        } else if (title.contains("LEGEND")) {
-            return ChatColor.DARK_RED + ChatColor.BOLD.toString();
-        } else if (title.contains("GRANDMASTER")) {
-            return ChatColor.YELLOW + ChatColor.BOLD.toString();
-        } else if (title.contains("GODLIKE")) {
-            return ChatColor.DARK_PURPLE + ChatColor.BOLD.toString();
-        } else if (title.contains("WORLD ELITE")) {
-            return ChatColor.AQUA.toString();
-        } else if (title.contains("WORLD MASTER")) {
-            return ChatColor.LIGHT_PURPLE.toString();
-        } else if (title.contains("WORLD'S BEST")) {
-            return ChatColor.GOLD.toString();
-        } else {
-            return ChatColor.GRAY.toString();
-        }
-    }
-
     public String getFormattedTitle(Duels duels) {
         String title = ((StatString)duels.title).getValue();
-        String formattedTitle = title.replace("_", " ").replace("Cosmetictitle", "");
+        String formattedTitle = title.replace("_", " ").replace("cosmetictitle", "");
 
         if (this.isPrestigeTitle(title)) {
-            DuelsModes duelMode = DuelsModes.valueOf(title.replace(" ", ""));
+            String modeName = title.substring(title.lastIndexOf("_") + 1);;
+
+            /* Hypixel being extra difficult and changing the names of their gamemodes only for titles */
+            if (title.contains("no_debuff") || title.contains("mega_walls") || title.contains("tnt_games") || title.contains("all_modes")) {
+                /* probably an easier way of doing this, although I'm lazy ~Max */
+                if (title.contains("no_debuff")) {
+                    modeName = "no_debuff";
+                } else if (title.contains("mega_walls")) {
+                    modeName = "mega_walls";
+                } else if (title.contains("tnt_games")) {
+                    modeName = "tnt_games";
+                } else if (title.contains("all_modes")) {
+                    modeName = "all_modes";
+                }
+            }
+
+            DuelsModes duelMode = DuelsModes.valueOf(modeName.toUpperCase());
             String gamemodeName = duelMode.getName();
-            String gamemodeJsonName = duelMode.getJsonName();
 
             /* calculate wins */
-            int gamemodeWins = duels.duelJson.get(gamemodeJsonName + "_duel_wins").getAsInt();
-            if (gamemodeWins == 100000) {
-                return gamemodeName + " World's Best";
-            } else if (gamemodeWins >= 50000) {
-                return gamemodeName + " World Master";
-            } else if (gamemodeWins >= 25000) {
-                return gamemodeName + " World Elite";
-            } else if (gamemodeWins >= 10000) {
-                return gamemodeName + " Godlike";
-            } else if (gamemodeWins >= 5000) {
-                return gamemodeName + " Grandmaster";
-            } else if (gamemodeWins >= 2000) {
-                return gamemodeName + " Legend";
-            } else if (gamemodeWins >= 1000) {
-                return gamemodeName + " Master";
-            } else if (gamemodeWins >= 500) {
-                return gamemodeName + " Diamond";
-            } else if (gamemodeWins >= 250) {
-                return gamemodeName + " Gold";
-            } else if (gamemodeWins >= 100) {
-                return gamemodeName + " Iron";
-            } else if (gamemodeWins >= 50) {
-                return gamemodeName + " Rookie";
-            } else {
-                return "NONE";
+            int gamemodeWins = duels.duelJson.get(duelMode.getWinsJson()).getAsInt();
+            int multiplier = title.toLowerCase().contains("all modes") ? 2 : 1;
+
+            if (title.toLowerCase().contains("world elite")) {
+                System.out.println(gamemodeWins);
+                System.out.println(duelMode.getWinsJson());
+            }
+
+            if (gamemodeWins >= 100000 * multiplier) {
+                return ChatColor.GOLD + gamemodeName + " World's Best";
+            } else if (gamemodeWins >= 50000 * multiplier) {
+                return ChatColor.LIGHT_PURPLE + gamemodeName + " World Master";
+            } else if (gamemodeWins >= 25000 * multiplier) {
+                return ChatColor.AQUA + gamemodeName + " World Elite";
+            } else if (gamemodeWins >= 10000 * multiplier) {
+                return ChatColor.DARK_PURPLE + ChatColor.BOLD.toString() + gamemodeName + " Godlike";
+            } else if (gamemodeWins >= 5000 * multiplier) {
+                return ChatColor.YELLOW + ChatColor.BOLD.toString() + gamemodeName + " Grandmaster";
+            } else if (gamemodeWins >= 2000 * multiplier) {
+                return ChatColor.DARK_RED + ChatColor.BOLD.toString() + gamemodeName + " Legend";
+            } else if (gamemodeWins >= 1000 * multiplier) {
+                return ChatColor.DARK_GREEN + gamemodeName + " Master";
+            } else if (gamemodeWins >= 500 * multiplier) {
+                return ChatColor.DARK_AQUA + gamemodeName + " Diamond";
+            } else if (gamemodeWins >= 250 * multiplier) {
+                return ChatColor.GOLD + gamemodeName + " Gold";
+            } else if (gamemodeWins >= 100 * multiplier) {
+                return ChatColor.WHITE + gamemodeName + " Iron";
+            } else if (gamemodeWins >= 50 * multiplier) {
+                return ChatColor.GRAY + gamemodeName + " Rookie";
             }
         }
 
@@ -217,6 +186,6 @@ public abstract class DuelsUtil extends HGameBase {
 
     private boolean isPrestigeTitle(String title) {
         title = title.toUpperCase();
-        return title.contains("ROOKIE") || title.contains("IRON") || title.contains("GOLD") || title.contains("DIAMOND") || title.contains("MASTER") || title.contains("LEGEND") || title.contains("GRANDMASTER") || title.contains("GODLIKE") || title.contains("WORLD ELITE") || title.contains("WORLD MASTER") || title.contains("WORLD'S BEST");
+        return title.contains("ROOKIE") || title.contains("IRON") || title.contains("GOLD") || title.contains("DIAMOND") || title.contains("MASTER") || title.contains("LEGEND") || title.contains("GRANDMASTER") || title.contains("GODLIKE") || title.contains("WORLD_ELITE") || title.contains("WORLD_MASTER") || title.contains("WORLDS_BEST");
     }
 }

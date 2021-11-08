@@ -82,9 +82,9 @@ public class Duels extends DuelsUtil {
     @Override
     public List<Stat> getFormattedStatList() {
         List<Stat> statList = new ArrayList<>(this.formattedStatList);
-        StatString title = new StatString("TITLE              ");
-        title.setValue(this.getTitleColor(((StatString)this.title).getValue()) + this.getFormattedTitle(this));
-        statList.add(title);
+        StatString title = new StatString("TITLE                      ");
+        title.setValue(this.getFormattedTitle(this));
+        statList.add(0, title);
 
         return statList;
     }
@@ -98,7 +98,7 @@ public class Duels extends DuelsUtil {
         this.formattedStatList.add(ws);
 
         StatString bws = new StatString("BWS");
-        bws.setValue(this.getBestWSColor(((StatInt)this.bestWinstreak).getValue()).toString() + ((StatInt)this.bestWinstreak).getValue());
+        bws.setValue(this.getWSColor(((StatInt)this.bestWinstreak).getValue()).toString() + ((StatInt)this.bestWinstreak).getValue());
         this.formattedStatList.add(bws);
 
         StatString ks = new StatString("KILLS");
