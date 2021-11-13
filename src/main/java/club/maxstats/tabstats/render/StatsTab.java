@@ -43,10 +43,12 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private final GuiIngame guiIngame;
     private IChatComponent footer;
     private IChatComponent header;
-    /** The last time the playerlist was opened (went from not being renderd, to being rendered) */
+    /** The amount of time since the playerlist was opened (went from not being rendered, to being rendered) */
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
-    private boolean isBeingRendered;
+    public boolean tabBeingRendered;
+    /**Whether or not to move the tablist down (we'll add an option in /tabstats gui)**/
+    public boolean moveTabDown;
     /* whether or not rank should come before color prefix */
     private boolean rankBeforePrefix = false;
     private final int entryHeight = 12;
@@ -70,8 +72,12 @@ public class StatsTab extends GuiPlayerTabOverlay {
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         /* where the render should start on x plane */
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
-        /* where the render should start on y plane */
-        int startingY = 35;
+        /* where the render should start on y plane (either below bossbar or at the top with a hidden bossbar)*/
+        // if (moveTabDown) {
+        int startingY = 36;
+        // } else {
+        // int startingY = 12;
+        // }
 
         /* this is kind of useless...as nameWidth and objectiveWidth aren't used */
         for (NetworkPlayerInfo playerInfo : playerList) {
@@ -307,7 +313,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         String playerRank = hPlayer.getPlayerRank();
 
         if (team != null) {
-            /* smart replacement of ranks */
+            /** remove [NON] as it's not shown in regular tab **/
             String colorPrefix = team.getColorPrefix();
             if (ChatColor.stripColor(colorPrefix).contains(ChatColor.stripColor(playerRank))) {
                 playerRank = "";
