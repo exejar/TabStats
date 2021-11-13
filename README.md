@@ -1,8 +1,11 @@
 **A 1.8.9 Hypixel forge mod made for stat checking directly into your tablist!**
 
+
 When you first join Hypixel with this mod, type **/api new**, then restart your game.
 
+
 Join Our **Discord** for support: https://maxstats.club/discord/
+
 
 **Images:**
 
