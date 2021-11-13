@@ -18,7 +18,6 @@ Join Our **Discord** for support: https://maxstats.club/discord/
 
 **Plans:**
 - Add a gui using **/tabstats** to provide customizability
-- Add a denicker
 - Add an antisniper
 - Add autododge
 - Add Skywars, Blitz, and UHC support
