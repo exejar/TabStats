@@ -58,48 +58,54 @@ public abstract class DuelsUtil extends HGameBase {
     }
 
     public ChatColor getKillsColor(int kills) {
-        if (kills < 1000) {
-            return ChatColor.GRAY;
-        } else if (kills < 3000) {
-            return ChatColor.WHITE;
-        } else if (kills < 5000) {
+        if (kills >= 200000) {
             return ChatColor.GOLD;
-        } else if (kills < 10000) {
-            return ChatColor.DARK_GREEN;
-        } else if (kills < 20000) {
-            return ChatColor.RED;
-        } else if (kills < 25000) {
-            return ChatColor.DARK_RED;
-        } else if (kills < 30000) {
+        } else if (kills >= 100000) {
             return ChatColor.LIGHT_PURPLE;
-        } else {
+        } else if (kills >= 50000) {
+            return ChatColor.AQUA;
+        } else if (kills >= 20000) {
             return ChatColor.DARK_PURPLE;
+        } else if (kills >= 10000) {
+            return ChatColor.YELLOW;
+        } else if (kills >= 4000) {
+            return ChatColor.DARK_RED;
+        } else if (kills >= 2000) {
+            return ChatColor.DARK_GREEN;
+        } else if (kills >= 1000) {
+            return ChatColor.DARK_AQUA;
+        } else if (kills >= 500) {
+            return ChatColor.GOLD;
+        } else if (kills >= 200) {
+            return ChatColor.WHITE;
+        } else {
+            return ChatColor.GRAY;
         }
     }
 
     public ChatColor getWinsColor(int wins) {
-        if (wins < 50) {
-            return ChatColor.GRAY;
-        } else if (wins < 100) {
-            return ChatColor.WHITE;
-        } else if (wins < 250) {
+        if (wins >= 200000) {
             return ChatColor.GOLD;
-        } else if (wins < 500) {
-            return ChatColor.DARK_AQUA;
-        } else if (wins < 1000) {
-            return ChatColor.GREEN;
-        } else if (wins < 2000) {
-            return ChatColor.DARK_RED;
-        } else if (wins < 5000) {
-            return ChatColor.YELLOW;
-        } else if (wins < 10000) {
-        return ChatColor.DARK_PURPLE;
-        } else if (wins < 25000) {
-            return ChatColor.AQUA;
-        } else if (wins < 50000) {
+        } else if (wins >= 100000) {
             return ChatColor.LIGHT_PURPLE;
-        } else {
+        } else if (wins >= 50000) {
+            return ChatColor.AQUA;
+        } else if (wins >= 20000) {
+            return ChatColor.DARK_PURPLE;
+        } else if (wins >= 10000) {
             return ChatColor.YELLOW;
+        } else if (wins >= 4000) {
+            return ChatColor.DARK_RED;
+        } else if (wins >= 2000) {
+            return ChatColor.DARK_GREEN;
+        } else if (wins >= 1000) {
+            return ChatColor.DARK_AQUA;
+        } else if (wins >= 500) {
+            return ChatColor.GOLD;
+        } else if (wins >= 200) {
+            return ChatColor.WHITE;
+        } else {
+            return ChatColor.GRAY;
         }
     }
 
