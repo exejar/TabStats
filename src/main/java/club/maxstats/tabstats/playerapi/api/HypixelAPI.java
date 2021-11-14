@@ -80,7 +80,7 @@ public class HypixelAPI {
      * @param game Game Stats to retrieve
      * @return JsonObject of the specified gameType's Stats
      */
-    public JsonObject getGameData(JsonObject wholeObject, HypixelGames game) throws GameNullException {
+    public static JsonObject getGameData(JsonObject wholeObject, HypixelGames game) throws GameNullException {
         JsonObject player = wholeObject.get("player").getAsJsonObject();
         JsonObject stats = player.get("stats").getAsJsonObject();
 

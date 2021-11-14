@@ -30,7 +30,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Comparator;
@@ -38,22 +37,26 @@ import java.util.List;
 
 /* fair warning, this class is heavily "documented" (very poorly) for new programmers to understand how it works */
 public class StatsTab extends GuiPlayerTabOverlay {
+    public static final int headSize = 12;
     private static final Ordering<NetworkPlayerInfo> field_175252_a = Ordering.from(new StatsTab.PlayerComparator());
     private final Minecraft mc;
     private final GuiIngame guiIngame;
-    private IChatComponent footer;
-    private IChatComponent header;
-    /** The amount of time since the playerlist was opened (went from not being rendered, to being rendered) */
-    private long lastTimeOpened;
-    /** Whether or not the playerlist is currently being rendered */
-    public boolean tabBeingRendered;
-    /**Whether or not to move the tablist down (we'll add an option in /tabstats gui)**/
-    public boolean moveTabDown;
-    /* whether or not rank should come before color prefix */
-    private boolean rankBeforePrefix = false;
     private final int entryHeight = 12;
     private final int backgroundBorderSize = 12;
-    public static final int headSize = 12;
+    /**
+     * Whether or not the playerlist is currently being rendered
+     */
+    public boolean tabBeingRendered;
+    /**
+     * Whether or not to move the tablist down (we'll add an option in /tabstats gui)
+     **/
+    public boolean moveTabDown;
+    private IChatComponent footer;
+    private IChatComponent header;
+    /**
+     * The amount of time since the playerlist was opened (went from not being rendered, to being rendered)
+     */
+    private long lastTimeOpened;
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
         super(mcIn, guiIngameIn);
@@ -95,7 +98,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* meant for initializing the render of score objective */
         if (scoreObjectiveIn != null) {
             /* this is usually the raw name meant for internal usage */
-            String objectiveRawName = WordUtils.capitalize(scoreObjectiveIn.getName().replace("_", " "));
+            //String objectiveRawName = WordUtils.capitalize(scoreObjectiveIn.getName().replace("_", " "));
 
             /* this is usually the formatted name meant for display */
             String objectiveDisplayname = WordUtils.capitalize(scoreObjectiveIn.getDisplayName().replace("_", ""));
@@ -109,15 +112,15 @@ public class StatsTab extends GuiPlayerTabOverlay {
         int playerListSize = playerList.size();
 
         /* the entire tab background */
-        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
+        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize, (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
 
         /* draw an entry rect for the stat name title */
         drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, 553648127);
 
         /* Start with drawing the name and objective, as they will always be here and aren't inside of the Stat List */
         int statXSpacer = startingX + headSize + 2;
-        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
-        this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + ((float) this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+        this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + ((float) this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
         /* adds longest name possible in pixels to statXSpacer since name's are way longer than stats */
         statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW") + 10;
@@ -125,7 +128,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* loops through all the stats that should be displayed and renders their stat titles */
         for (Stat stat : gameStatTitleList) {
             String statName = stat.getStatName();
-            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + ((float) this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
 
             /* adds spacer for next stat */
             statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + statName) + 10;
@@ -185,24 +188,24 @@ public class StatsTab extends GuiPlayerTabOverlay {
                         /* finds the exact stat type so it can properly retrieve the stat value */
                         switch (stat.getType()) {
                             case INT:
-                                statValue = Integer.toString(((StatInt)stat).getValue());
+                                statValue = Integer.toString(((StatInt) stat).getValue());
                                 break;
                             case DOUBLE:
-                                statValue = Double.toString(((StatDouble)stat).getValue());
+                                statValue = Double.toString(((StatDouble) stat).getValue());
                                 break;
                             case STRING:
-                                statValue = ((StatString)stat).getValue();
+                                statValue = ((StatString) stat).getValue();
                                 break;
                         }
 
                         // draws the stats
-                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + ((float) this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
                         valueXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + stat.getStatName()) + 10;
                     }
                 }
 
                 // draws the players name
-                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
+                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + ((float) this.entryHeight / 2 - 4), -1);
             }
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
@@ -226,10 +229,10 @@ public class StatsTab extends GuiPlayerTabOverlay {
             if (this.lastTimeOpened == playerInfo.func_178855_p()) {
                 if (i < playerInfo.func_178835_l()) {
                     playerInfo.func_178846_a(Minecraft.getSystemTime());
-                    playerInfo.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 20));
+                    playerInfo.func_178844_b(this.guiIngame.getUpdateCounter() + 20);
                 } else if (i > playerInfo.func_178835_l()) {
                     playerInfo.func_178846_a(Minecraft.getSystemTime());
-                    playerInfo.func_178844_b((long)(this.guiIngame.getUpdateCounter() + 10));
+                    playerInfo.func_178844_b(this.guiIngame.getUpdateCounter() + 10);
                 }
             }
 
@@ -241,69 +244,57 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
             playerInfo.func_178843_c(this.lastTimeOpened);
             playerInfo.func_178836_b(i);
-            int j = MathHelper.ceiling_float_int((float)Math.max(i, playerInfo.func_178860_m()) / 2.0F);
-            int k = Math.max(MathHelper.ceiling_float_int((float)(i / 2)), Math.max(MathHelper.ceiling_float_int((float)(playerInfo.func_178860_m() / 2)), 10));
-            boolean flag = playerInfo.func_178858_o() > (long)this.guiIngame.getUpdateCounter() && (playerInfo.func_178858_o() - (long)this.guiIngame.getUpdateCounter()) / 3L % 2L == 1L;
+            int j = MathHelper.ceiling_float_int((float) Math.max(i, playerInfo.func_178860_m()) / 2.0F);
+            int k = Math.max(MathHelper.ceiling_float_int((float) (i / 2)), Math.max(MathHelper.ceiling_float_int((float) (playerInfo.func_178860_m() / 2)), 10));
+            boolean flag = playerInfo.func_178858_o() > (long) this.guiIngame.getUpdateCounter() && (playerInfo.func_178858_o() - (long) this.guiIngame.getUpdateCounter()) / 3L % 2L == 1L;
 
             if (j > 0) {
-                float f = Math.min((float)(endX - startX - 4) / (float)k, 9.0F);
+                float f = Math.min((float) (endX - startX - 4) / (float) k, 9.0F);
 
                 if (f > 3.0F) {
                     for (int l = j; l < k; ++l) {
-                        this.drawTexturedModalRect((float)startX + (float)l * f, (float)y, flag ? 25 : 16, 0, 9, 9);
+                        this.drawTexturedModalRect((float) startX + (float) l * f, (float) y, flag ? 25 : 16, 0, 9, 9);
                     }
 
                     for (int j1 = 0; j1 < j; ++j1) {
-                        this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, flag ? 25 : 16, 0, 9, 9);
+                        this.drawTexturedModalRect((float) startX + (float) j1 * f, (float) y, flag ? 25 : 16, 0, 9, 9);
 
                         if (flag) {
                             if (j1 * 2 + 1 < playerInfo.func_178860_m()) {
-                                this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, 70, 0, 9, 9);
+                                this.drawTexturedModalRect((float) startX + (float) j1 * f, (float) y, 70, 0, 9, 9);
                             }
 
                             if (j1 * 2 + 1 == playerInfo.func_178860_m()) {
-                                this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, 79, 0, 9, 9);
+                                this.drawTexturedModalRect((float) startX + (float) j1 * f, (float) y, 79, 0, 9, 9);
                             }
                         }
 
                         if (j1 * 2 + 1 < i) {
-                            this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, j1 >= 10 ? 160 : 52, 0, 9, 9);
+                            this.drawTexturedModalRect((float) startX + (float) j1 * f, (float) y, j1 >= 10 ? 160 : 52, 0, 9, 9);
                         }
 
                         if (j1 * 2 + 1 == i) {
-                            this.drawTexturedModalRect((float)startX + (float)j1 * f, (float)y, j1 >= 10 ? 169 : 61, 0, 9, 9);
+                            this.drawTexturedModalRect((float) startX + (float) j1 * f, (float) y, j1 >= 10 ? 169 : 61, 0, 9, 9);
                         }
                     }
                 } else {
-                    float f1 = MathHelper.clamp_float((float)i / 20.0F, 0.0F, 1.0F);
-                    int i1 = (int)((1.0F - f1) * 255.0F) << 16 | (int)(f1 * 255.0F) << 8;
-                    String s = "" + (float)i / 2.0F;
+                    float f1 = MathHelper.clamp_float((float) i / 20.0F, 0.0F, 1.0F);
+                    int i1 = (int) ((1.0F - f1) * 255.0F) << 16 | (int) (f1 * 255.0F) << 8;
+                    String s = "" + (float) i / 2.0F;
 
                     if (endX - this.mc.fontRendererObj.getStringWidth(s + "hp") >= startX) {
                         s = s + "hp";
                     }
 
-                    this.mc.fontRendererObj.drawStringWithShadow(s, (float)((endX + startX) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float)y, i1);
+                    this.mc.fontRendererObj.drawStringWithShadow(s, (float) ((endX + startX) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float) y, i1);
                 }
             }
         } else {
             /* This is where Hypixel usually has Client draw Scoreboard Stats */
 
             String s1 = EnumChatFormatting.YELLOW + "" + i;
-            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y + (this.entryHeight / 2 - 4), 16777215);
+            this.mc.fontRendererObj.drawStringWithShadow(s1, (float) (endX - this.mc.fontRendererObj.getStringWidth(s1)), (float) y + ((float) this.entryHeight / 2 - 4), 16777215);
 //            drawRect(endX - this.mc.fontRendererObj.getStringWidth(objectiveIn.getDisplayName()), y, endX, y + this.entryHeight, 553648127);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    static class PlayerComparator implements Comparator<NetworkPlayerInfo> {
-        private PlayerComparator() {
-        }
-
-        public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_) {
-            ScorePlayerTeam scoreplayerteam = p_compare_1_.getPlayerTeam();
-            ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
-            return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != WorldSettings.GameType.SPECTATOR, p_compare_2_.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "").compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName()).result();
         }
     }
 
@@ -313,7 +304,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         String playerRank = hPlayer.getPlayerRank();
 
         if (team != null) {
-            /** remove [NON] as it's not shown in regular tab **/
+            /* remove [NON] as it's not shown in regular tab */
             String colorPrefix = team.getColorPrefix();
             if (ChatColor.stripColor(colorPrefix).contains(ChatColor.stripColor(playerRank))) {
                 playerRank = "";
@@ -325,7 +316,9 @@ public class StatsTab extends GuiPlayerTabOverlay {
 //                }
             }
 
-            if (this.rankBeforePrefix) {
+            /* whether or not rank should come before color prefix */
+            boolean rankBeforePrefix = false;
+            if (rankBeforePrefix) {
                 return playerRank + colorPrefix + playerInfo.getGameProfile().getName() + team.getColorSuffix();
             } else {
                 return colorPrefix + playerRank + playerInfo.getGameProfile().getName() + team.getColorSuffix();
@@ -333,5 +326,17 @@ public class StatsTab extends GuiPlayerTabOverlay {
         }
 
         return this.getPlayerName(playerInfo);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static class PlayerComparator implements Comparator<NetworkPlayerInfo> {
+        private PlayerComparator() {
+        }
+
+        public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_) {
+            ScorePlayerTeam scoreplayerteam = p_compare_1_.getPlayerTeam();
+            ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
+            return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != WorldSettings.GameType.SPECTATOR, p_compare_2_.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "").compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName()).result();
+        }
     }
 }

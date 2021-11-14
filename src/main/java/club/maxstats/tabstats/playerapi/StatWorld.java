@@ -7,6 +7,7 @@ import club.maxstats.tabstats.playerapi.exception.ApiRequestException;
 import club.maxstats.tabstats.playerapi.exception.BadJsonException;
 import club.maxstats.tabstats.playerapi.exception.InvalidKeyException;
 import club.maxstats.tabstats.playerapi.exception.PlayerNullException;
+import club.maxstats.tabstats.util.Handler;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -55,49 +56,45 @@ public class StatWorld {
     }
 
     public void fetchStats(EntityPlayer entityPlayer) {
-        new Thread(() -> {
-            final UUID uuid = entityPlayer.getUniqueID();
-            String playerName = entityPlayer.getName();
-            String playerUUID = entityPlayer.getUniqueID().toString().replace("-", "");
-            boolean nicked = false;
+        Handler.asExecutor(() -> {
+        final UUID uuid = entityPlayer.getUniqueID();
+        String playerName = entityPlayer.getName();
+        String playerUUID = entityPlayer.getUniqueID().toString().replace("-", "");
+        boolean nicked = uuid.version() == 1;
 
-            if (uuid.version() == 1) {
-                nicked = true;
+        HPlayer hPlayer = new HPlayer(playerUUID, playerName);
+        hPlayer.setNicked(nicked);
+
+        if (!nicked) {
+            JsonObject wholeObject;
+
+            try {
+                // retrieves the entire json object for the player and stores it in wholeObject
+                wholeObject = new HypixelAPI().getWholeObject(playerUUID.replace("-", ""));
+            } catch (PlayerNullException | ApiRequestException | InvalidKeyException | BadJsonException ex) {
+                this.addPlayer(uuid, hPlayer);
+                this.removeFromStatAssembly(uuid);
+                System.out.println("Could not retrieve player");
+                ex.printStackTrace();
+                return;
             }
 
-            HPlayer hPlayer = new HPlayer(playerUUID, playerName);
-            hPlayer.setNicked(nicked);
+            if (wholeObject != null) {
+                // initialize which games you want the player to be created with
+                JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
 
-            if (!nicked) {
-                JsonObject wholeObject;
+                hPlayer.setPlayerRank(playerObject);
+                hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
 
-                try {
-                    // retrieves the entire json object for the player and stores it in wholeObject
-                    wholeObject = new HypixelAPI().getWholeObject(playerUUID.replace("-", ""));
-                } catch (PlayerNullException | ApiRequestException | InvalidKeyException | BadJsonException ex) {
-                    this.addPlayer(uuid, hPlayer);
-                    this.removeFromStatAssembly(uuid);
-                    System.out.println("Could not retrieve player");
-                    ex.printStackTrace();
-                    return;
-                }
+                Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
+                Duels duels = new Duels(playerName, playerUUID, wholeObject);
 
-                if (wholeObject != null) {
-                    // initialize which games you want the player to be created with
-                    JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
-
-                    hPlayer.setPlayerRank(playerObject);
-                    hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
-
-                    Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
-                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
-
-                    hPlayer.addGames(bw, duels);
-                }
+                hPlayer.addGames(bw, duels);
             }
+        }
 
-            this.addPlayer(uuid, hPlayer);
-            this.removeFromStatAssembly(uuid);
-        }).start();
+        this.addPlayer(uuid, hPlayer);
+        this.removeFromStatAssembly(uuid);
+        });
     }
 }
