@@ -28,10 +28,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldSettings;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.util.Comparator;
 import java.util.List;
@@ -43,10 +46,10 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private final GuiIngame guiIngame;
     private IChatComponent footer;
     private IChatComponent header;
-    /** The last time the playerlist was opened (went from not being renderd, to being rendered) */
+    /** The amount of time since the playerlist was opened (went from not being rendered, to being rendered) */
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
-    private boolean isBeingRendered;
+    public boolean tabBeingRendered;
     /* whether or not rank should come before color prefix */
     private boolean rankBeforePrefix = false;
     private final int entryHeight = 12;
@@ -70,7 +73,6 @@ public class StatsTab extends GuiPlayerTabOverlay {
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         /* where the render should start on x plane */
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
-        /* where the render should start on y plane */
         int startingY = 35;
 
         /* this is kind of useless...as nameWidth and objectiveWidth aren't used */
@@ -307,7 +309,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         String playerRank = hPlayer.getPlayerRank();
 
         if (team != null) {
-            /* smart replacement of ranks */
+            /** remove [NON] as it's not shown in regular tab */
             String colorPrefix = team.getColorPrefix();
             if (ChatColor.stripColor(colorPrefix).contains(ChatColor.stripColor(playerRank))) {
                 playerRank = "";
