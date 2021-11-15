@@ -7,6 +7,7 @@ import club.maxstats.tabstats.playerapi.exception.ApiRequestException;
 import club.maxstats.tabstats.playerapi.exception.BadJsonException;
 import club.maxstats.tabstats.playerapi.exception.InvalidKeyException;
 import club.maxstats.tabstats.playerapi.exception.PlayerNullException;
+import club.maxstats.tabstats.util.Handler;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -55,25 +56,29 @@ public class StatWorld {
     }
 
     public void fetchStats(EntityPlayer entityPlayer) {
-        new Thread(() -> {
-            final UUID uuid = entityPlayer.getUniqueID();
+        Handler.asExecutor(()-> {
+            UUID uuid = entityPlayer.getUniqueID();
             String playerName = entityPlayer.getName();
             String playerUUID = entityPlayer.getUniqueID().toString().replace("-", "");
-            boolean nicked = false;
-
-            if (uuid.version() == 1) {
-                nicked = true;
-            }
+            boolean nicked = uuid.version() == 1;
 
             HPlayer hPlayer = new HPlayer(playerUUID, playerName);
             hPlayer.setNicked(nicked);
 
             if (!nicked) {
-                JsonObject wholeObject;
-
                 try {
                     // retrieves the entire json object for the player and stores it in wholeObject
-                    wholeObject = new HypixelAPI().getWholeObject(playerUUID.replace("-", ""));
+                    JsonObject wholeObject = new HypixelAPI().getWholeObject(playerUUID);
+                    JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
+
+                    hPlayer.setPlayerRank(playerObject);
+                    hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
+
+                    // initialize which games you want the player to be created with
+                    Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
+                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
+
+                    hPlayer.addGames(bw, duels);
                 } catch (PlayerNullException | ApiRequestException | InvalidKeyException | BadJsonException ex) {
                     this.addPlayer(uuid, hPlayer);
                     this.removeFromStatAssembly(uuid);
@@ -81,23 +86,10 @@ public class StatWorld {
                     ex.printStackTrace();
                     return;
                 }
-
-                if (wholeObject != null) {
-                    // initialize which games you want the player to be created with
-                    JsonObject playerObject = wholeObject.get("player").getAsJsonObject();
-
-                    hPlayer.setPlayerRank(playerObject);
-                    hPlayer.setPlayerName(playerObject.get("displayname").getAsString());
-
-                    Bedwars bw = new Bedwars(playerName, playerUUID, wholeObject);
-                    Duels duels = new Duels(playerName, playerUUID, wholeObject);
-
-                    hPlayer.addGames(bw, duels);
-                }
             }
 
             this.addPlayer(uuid, hPlayer);
             this.removeFromStatAssembly(uuid);
-        }).start();
+        });
     }
 }
