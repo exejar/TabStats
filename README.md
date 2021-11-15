@@ -7,7 +7,7 @@
 When you first join Hypixel with this mod, type **/api new**, then restart your game.
 
 
-Join Our **Discord** for support: https://maxstats.club/discord/
+Join Our **Discord** for support: https://discord.gg/maxstats *(Backup https://maxstats.club/discord)*
 
 
 **Images:**
