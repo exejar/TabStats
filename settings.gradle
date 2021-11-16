@@ -15,6 +15,7 @@ pluginManagement {
 
     resolutionStrategy {
         eachPlugin {
+            // If the plugin requested is forgegradle, redirect it to asbyth's ForgeGradle fork
             if (requested.id.id == "net.minecraftforge.gradle.forge") {
                 useModule("com.github.asbyth:ForgeGradle:${requested.version}")
             }

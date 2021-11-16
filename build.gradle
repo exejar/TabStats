@@ -1,3 +1,4 @@
+// Defines gradle plugins to use in the project
 plugins {
     id "net.minecraftforge.gradle.forge" version "ddb1eb0"
     id "com.github.johnrengelman.shadow" version "6.1.0"
@@ -8,19 +9,21 @@ version = mod_version
 group = mod_group
 archivesBaseName = mod_name
 
-sourceCompatibility = targetCompatibility = 1.8
+// set compiling to UTF-8 and source / target compat to java 1.8 to prevent edge cases
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava.options.encoding = 'UTF-8'
 
 minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
 
+    // replace these with the mod name version and id respectively
     replace('@NAME@', mod_name)
     replace('@VER@': mod_version)
     replace('@ID@', mod_id)
 
     mappings = "stable_22"
-    makeObfSourceJar = false
+    makeObfSourceJar = false //stop source jar from being made
 }
 
 configurations {
@@ -55,6 +58,7 @@ jar {
     enabled = false
 }
 
+// "fixes" a bug where forge doesn't detect resources
 task moveResources {
     doLast {
         try {
@@ -66,6 +70,7 @@ task moveResources {
 }
 
 shadowJar {
+    // exclude unneeded files
     archiveClassifier.set('')
     configurations = [project.configurations.shade]
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
