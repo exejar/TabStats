@@ -16,6 +16,7 @@ import static club.maxstats.tabstats.config.ModConfigNames.APIKEY;
 public class ModConfig {
     private String apiKey;
     private static ModConfig instance;
+    private static final JsonParser parser = new JsonParser();
 
     public static ModConfig getInstance() {
         if (instance == null) instance = new ModConfig();
@@ -76,10 +77,9 @@ public class ModConfig {
     }
 
     public String getString(ModConfigNames key) {
-        JsonParser parser = new JsonParser();
         String s = "";
         try {
-            JsonObject object = (JsonObject) parser.parse(new FileReader(getFile()));
+            JsonObject object = parser.parse(new FileReader(getFile())).getAsJsonObject();
             s = object.get(key.toString()).getAsString();
         } catch (NullPointerException ignored) {
         } catch (Exception ex) {

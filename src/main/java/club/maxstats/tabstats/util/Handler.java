@@ -13,6 +13,8 @@ import java.util.concurrent.Executors;
 public class Handler {
     public static final Locale LOCALE = getLocale();
     private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("InjectAgnet-%d").build());
+    private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
+    private static final GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
 
     private static Locale getLocale() {
         return new Locale(System.getProperty("user.language"), System.getProperty("user.country"));
@@ -23,7 +25,7 @@ public class Handler {
     }
 
     public static Gson getGson() {
-        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setDateFormat(getDate().toPattern()).create();
+        return builder.setDateFormat(getDate().toPattern()).create();
     }
 
     public static SimpleDateFormat getDate() {
@@ -31,7 +33,6 @@ public class Handler {
     }
 
     public static String plsSplit(double o) {
-        DecimalFormat decimalFormat = new DecimalFormat("##.##");
         return decimalFormat.format(o);
     }
 }
