@@ -1,2 +1,26 @@
-rootProject.name = 'TabStats'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+        maven {
+            name = "Forge"
+            url = "https://maven.minecraftforge.net/"
+        }
+        maven {
+            name = "Jitpack"
+            url = "https://jitpack.io/"
+        }
+    }
 
+    resolutionStrategy {
+        eachPlugin {
+            // If the plugin requested is forgegradle, redirect it to asbyth's ForgeGradle fork
+            if (requested.id.id == "net.minecraftforge.gradle.forge") {
+                useModule("com.github.asbyth:ForgeGradle:${requested.version}")
+            }
+        }
+    }
+}
+
+rootProject.name = mod_name

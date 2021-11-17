@@ -1,74 +1,107 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
-    }
+// Defines gradle plugins to use in the project
+plugins {
+    id "net.minecraftforge.gradle.forge" version "ddb1eb0"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "java"
 }
 
-apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'net.minecraftforge.gradle.forge'
+version = mod_version
+group = mod_group
+archivesBaseName = mod_name
 
-version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+// set compiling to UTF-8 and source / target compat to java 1.8 to prevent edge cases
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
 
 minecraft {
-    version = project.forgeVersion
+    version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
-    mappings = project.mcpVersion
+
+    // replace these with the mod name version and id respectively
+    replace('@NAME@', mod_name)
+    replace('@VER@': mod_version)
+    replace('@ID@', mod_id)
+
+    mappings = "stable_22"
+    makeObfSourceJar = false //stop source jar from being made
+}
+
+configurations {
+    /* Creates an extra dependency configuration that implements `implementation`, */
+    /* to be used later to shade libraries. */
+
+    shade
+    implementation.extendsFrom(shade)
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-    implementation group: 'com.google.code.gson', name: 'gson', version:'2.7'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
+    /* If you'd like access to a dependency's source (for example, another mod) use the method below: */
+    /* implementation('com.example.package:example:1.0.0') */
+
+    /* If you'd rather like your dependency to be inside your built JAR file, use: */
+    /* shade('com.example.package:example:1.0.0') */
 }
 
 processResources {
-    inputs.property "version", modVersion
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "version": modVersion, "mcversion": project.minecraft.version, "modid": modBaseName, "name": modName, "description": modDescription, "url": modURL, "updateUrl": updateUrl
+    filesMatching("mcmod.info") {
+        expand "version": project.version
     }
+}
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
+jar {
+    enabled = false
+}
+
+// "fixes" a bug where forge doesn't detect resources
+task moveResources {
+    doLast {
+        try {
+            ant.move file: "${buildDir}/resources/main", todir: "${buildDir}/classes/java"
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
     }
 }
 
 shadowJar {
-    exclude 'GradleStart**'
-    exclude '.cache'
-}
+    // exclude unneeded files
+    archiveClassifier.set('')
+    configurations = [project.configurations.shade]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
+    exclude 'LICENSE.md'
+    exclude 'pack.mcmeta'
+    exclude 'dummyThing'
+    exclude '**/module-info.class'
+    exclude '*.so'
+    exclude '*.dylib'
+    exclude '*.dll'
+    exclude '*.jnilib'
+    exclude 'ibxm/**'
+    exclude 'com/jcraft/**'
+    exclude 'org/lwjgl/**'
+    exclude 'net/java/**'
 
-build {
-    clean
-    build
-    shadowJar
-    reobf
+    exclude 'META-INF/proguard/**'
+    exclude 'META-INF/maven/**'
+    exclude 'META-INF/versions/**'
+    exclude 'META-INF/com.android.tools/**'
+
+    exclude 'fabric.mod.json'
 }
 
 reobf {
     shadowJar {
-        mappingType = 'SEARGE'
+        classpath = sourceSets.main.compileClasspath
     }
 }
 
-build.dependsOn shadowJar
+moveResources.dependsOn(processResources)
+classes.dependsOn(moveResources)
+reobfJar.dependsOn(shadowJar)
