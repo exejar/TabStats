@@ -211,7 +211,7 @@ public abstract class BedwarsUtil extends HGameBase {
 
             this.starWave = (long)((System.currentTimeMillis() % 850L / 850.0F) * colorAmount);
 
-            return colors[(int)(this.starWave + 4) % colorAmount].toString() + starString.charAt(0) + colors[(int)(this.starWave + 3) % colorAmount].toString() + starString.charAt(1) + colors[(int)(this.starWave + 2) % colorAmount].toString() + starString.charAt(2) + colors[(int)(this.starWave + 1) % colorAmount].toString() + starString.charAt(3) + colors[(int)(this.starWave + 0) % colorAmount].toString() + starUnicode;
+            return colors[(int)(this.starWave + 4) % colorAmount].toString() + starString.charAt(0) + colors[(int)(this.starWave + 3) % colorAmount].toString() + starString.charAt(1) + colors[(int)(this.starWave + 2) % colorAmount].toString() + starString.charAt(2) + colors[(int)(this.starWave + 1) % colorAmount].toString() + starString.charAt(3) + colors[(int)(this.starWave) % colorAmount].toString() + starUnicode;
         }
     }
 

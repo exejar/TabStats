@@ -134,7 +134,7 @@ public abstract class DuelsUtil extends HGameBase {
         String formattedTitle = title.replace("_", " ").replace("cosmetictitle", "");
 
         if (this.isPrestigeTitle(title)) {
-            String modeName = title.substring(title.lastIndexOf("_") + 1);;
+            String modeName = title.substring(title.lastIndexOf("_") + 1);
 
             /* Hypixel being extra difficult and changing the names of their gamemodes only for titles */
             if (title.contains("no_debuff") || title.contains("mega_walls") || title.contains("tnt_games") || title.contains("all_modes")) {
