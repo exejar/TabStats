@@ -2,12 +2,20 @@
 plugins {
     id "net.minecraftforge.gradle.forge" version "ddb1eb0"
     id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "net.kyori.blossom" version "1.3.0"
     id "java"
 }
 
 version = mod_version
 group = mod_group
 archivesBaseName = mod_name
+
+blossom {
+    String className = "src/main/java/com/example/template/ForgeTemplate.java"
+    replaceToken("@VER@", project.version, className)
+    replaceToken("@NAME@", mod_name, className)
+    replaceToken("@ID@", mod_id, className)
+}
 
 // set compiling to UTF-8 and source / target compat to java 1.8 to prevent edge cases
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -17,28 +25,33 @@ minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
 
-    // replace these with the mod name version and id respectively
-    replace('@NAME@', mod_name)
-    replace('@VER@': mod_version)
-    replace('@ID@', mod_id)
-
     mappings = "stable_22"
     makeObfSourceJar = false //stop source jar from being made
+
+    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
 }
 
 configurations {
     /* Creates an extra dependency configuration that implements `implementation`, */
     /* to be used later to shade libraries. */
-
+    include
+    implementation.extendsFrom(include)
     shade
     implementation.extendsFrom(shade)
 }
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io/' }
+    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url 'https://repo.sk1er.club/repository/maven-releases/' }
 }
 
 dependencies {
+    include ('gg.essential:loader-launchwrapper:1.1.2') {
+        transitive = false
+    }
+    implementation 'gg.essential:essential-1.8.9-forge:1495+release-launch'
     /* If you'd like access to a dependency's source (for example, another mod) use the method below: */
     /* implementation('com.example.package:example:1.0.0') */
 
@@ -55,6 +68,9 @@ processResources {
 }
 
 jar {
+    manifest.attributes (
+            'TweakClass': 'gg.essential.loader.stage0.EssentialSetupTweaker'
+    )
     enabled = false
 }
 
