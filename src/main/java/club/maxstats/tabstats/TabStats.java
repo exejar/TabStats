@@ -1,10 +1,13 @@
 package club.maxstats.tabstats;
 
+import club.maxstats.tabstats.command.TabStatsCommand;
+import club.maxstats.tabstats.config.TabStatsConfig;
 import club.maxstats.tabstats.config.ModConfig;
 import club.maxstats.tabstats.listener.ApiKeyListener;
 import club.maxstats.tabstats.listener.GameOverlayListener;
 import club.maxstats.tabstats.playerapi.WorldLoader;
 import club.maxstats.tabstats.util.References;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,16 +16,20 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.io.File;
 import java.util.Arrays;
 
 @Mod(modid = References.MODID, name = References.MODNAME, clientSideOnly = true, version = References.VERSION, acceptedMinecraftVersions = "1.8.9")
 public class TabStats {
     private static TabStats tabStats;
     private WorldLoader statWorld;
+    public static File modDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "MaxStats"), References.MODNAME);
+    public static TabStatsConfig config;
 
     /* Pre Initialization Event, Called before the initialization of Forge */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        if (!modDir.exists()) modDir.mkdir();
         tabStats = this;
         ModConfig.getInstance().init();
     }
@@ -30,6 +37,9 @@ public class TabStats {
     /* Initialization Event, Called during the initialization of Forge */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        new TabStatsCommand().register();
+        config = new TabStatsConfig();
+        config.preload();
         this.statWorld = new WorldLoader();
         this.registerListeners(statWorld, new GameOverlayListener(), new ApiKeyListener());
     }
