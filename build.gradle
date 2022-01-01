@@ -1,123 +1,75 @@
-// Defines gradle plugins to use in the project
 plugins {
-    id "net.minecraftforge.gradle.forge" version "ddb1eb0"
+    id "net.minecraftforge.gradle.forge" version "6f53277"
     id "com.github.johnrengelman.shadow" version "6.1.0"
-    id "net.kyori.blossom" version "1.3.0"
     id "java"
 }
 
-version = mod_version
-group = mod_group
-archivesBaseName = mod_name
+version = projectVersion
+group = projectGroup
+archivesBaseName = projectName
 
-blossom {
-    String className = "src/main/java/com/example/template/ForgeTemplate.java"
-    replaceToken("@VER@", project.version, className)
-    replaceToken("@NAME@", mod_name, className)
-    replaceToken("@ID@", mod_id, className)
-}
-
-// set compiling to UTF-8 and source / target compat to java 1.8 to prevent edge cases
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = targetCompatibility = 1.8
+compileJava.options.encoding = "UTF-8"
 
 minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
-
     mappings = "stable_22"
-    makeObfSourceJar = false //stop source jar from being made
-
-    clientRunArgs += '--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker'
+    makeObfSourceJar = false
+    replace("@NAME@", projectName)
+    replace("@VER@": projectVersion)
+    replace("@ID@", projectId)
 }
 
 configurations {
-    /* Creates an extra dependency configuration that implements `implementation`, */
-    /* to be used later to shade libraries. */
-    include
-    implementation.extendsFrom(include)
     shade
     implementation.extendsFrom(shade)
 }
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io/' }
-    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
-    maven { url 'https://repo.sk1er.club/repository/maven-releases/' }
+    maven { url "https://repo.sk1er.club/repository/maven-public/" }
 }
 
 dependencies {
-    include ('gg.essential:loader-launchwrapper:1.1.2') {
-        transitive = false
-    }
-    implementation 'gg.essential:essential-1.8.9-forge:1495+release-launch'
-    /* If you'd like access to a dependency's source (for example, another mod) use the method below: */
-    /* implementation('com.example.package:example:1.0.0') */
-
-    /* If you'd rather like your dependency to be inside your built JAR file, use: */
-    /* shade('com.example.package:example:1.0.0') */
+    implementation("gg.essential:vigilance-1.8.9-forge:${vigilanceVersion}")
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property("version", version)
+    inputs.property("mcversion", minecraft.version)
 
     filesMatching("mcmod.info") {
-        expand "version": project.version
+        expand(
+                "id": projectId,
+                "name": projectName,
+                "version": version,
+                "mcversion": minecraft.version
+        )
     }
 }
 
-jar {
-    manifest.attributes (
-            'TweakClass': 'gg.essential.loader.stage0.EssentialSetupTweaker'
-    )
-    enabled = false
-}
-
-// "fixes" a bug where forge doesn't detect resources
 task moveResources {
     doLast {
+        /* We wrap this action in a try-catch because of potential failures while hotswapping. */
         try {
-            ant.move file: "${buildDir}/resources/main", todir: "${buildDir}/classes/java"
+            ant.move(
+                    file: "${buildDir}/resources/main",
+                    todir: "${buildDir}/classes/java"
+            )
         } catch (Exception e) {
-            e.printStackTrace()
+            e.printStackTrace();
         }
     }
 }
 
 shadowJar {
-    // exclude unneeded files
-    archiveClassifier.set('')
     configurations = [project.configurations.shade]
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
 
-    exclude 'LICENSE.md'
-    exclude 'pack.mcmeta'
-    exclude 'dummyThing'
-    exclude '**/module-info.class'
-    exclude '*.so'
-    exclude '*.dylib'
-    exclude '*.dll'
-    exclude '*.jnilib'
-    exclude 'ibxm/**'
-    exclude 'com/jcraft/**'
-    exclude 'org/lwjgl/**'
-    exclude 'net/java/**'
-
-    exclude 'META-INF/proguard/**'
-    exclude 'META-INF/maven/**'
-    exclude 'META-INF/versions/**'
-    exclude 'META-INF/com.android.tools/**'
-
-    exclude 'fabric.mod.json'
-}
-
-reobf {
-    shadowJar {
-        classpath = sourceSets.main.compileClasspath
-    }
+    archiveClassifier.set("")
 }
 
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
-reobfJar.dependsOn(shadowJar)
+jar.finalizedBy(shadowJar)
