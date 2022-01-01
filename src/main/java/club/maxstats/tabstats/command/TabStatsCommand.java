@@ -1,18 +1,29 @@
 package club.maxstats.tabstats.command;
 
 import club.maxstats.tabstats.TabStats;
-import gg.essential.api.EssentialAPI;
-import gg.essential.api.commands.Command;
-import gg.essential.api.commands.DefaultHandler;
+import club.maxstats.tabstats.util.Multithreading;
+import club.maxstats.tabstats.util.References;
+import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
 
-public class TabStatsCommand extends Command {
-    public TabStatsCommand() {
-        super ("tabstats", true);
+import java.util.concurrent.*;
+
+public class TabStatsCommand extends CommandBase {
+
+    public String getCommandName() {
+        return References.MODID;
     }
 
-    @DefaultHandler
-    public void handle() {
-        EssentialAPI.getGuiUtil().openScreen(TabStats.config.gui());
+    public String getCommandUsage(ICommandSender sender) {
+        return null;
     }
 
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        return true;
+    }
+
+    public void processCommand(ICommandSender sender, String[] args) {
+        Multithreading.schedule(() -> Minecraft.getMinecraft().displayGuiScreen(TabStats.getTabStats().getConfig().gui()), 100, TimeUnit.MILLISECONDS);
+    }
 }

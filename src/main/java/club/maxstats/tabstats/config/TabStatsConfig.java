@@ -1,6 +1,6 @@
 package club.maxstats.tabstats.config;
 
-import club.maxstats.tabstats.TabStats;
+import club.maxstats.tabstats.util.References;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
@@ -15,10 +15,14 @@ public class TabStatsConfig extends Vigilant {
             description = "hi",
             category = "General"
     )
-    public static boolean exampleswitch = true;
+    private boolean exampleSwitch = true;
+
+    // example getter so you don't static aboos
+    public boolean getExampleswitch() {
+        return exampleSwitch;
+    }
 
     public TabStatsConfig() {
-        super(new File(TabStats.modDir, "tabstats.toml"), "Tab Stats");
-        initialize();
+        super(new File("./config", References.MODID + ".toml"), References.MODNAME);
     }
 }
