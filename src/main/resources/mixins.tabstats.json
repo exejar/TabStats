@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "club.maxstats.tabstats.mixin",
+  "refmap": "mixins.tabstats.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ModListMixin"
+  ],
+  "verbose": true
+}

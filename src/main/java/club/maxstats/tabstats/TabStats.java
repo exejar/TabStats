@@ -7,6 +7,7 @@ import club.maxstats.tabstats.listener.ApiKeyListener;
 import club.maxstats.tabstats.listener.GameOverlayListener;
 import club.maxstats.tabstats.playerapi.WorldLoader;
 import club.maxstats.tabstats.util.References;
+import gg.essential.vigilance.Vigilance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -37,7 +38,8 @@ public class TabStats {
     /* Initialization Event, Called during the initialization of Forge */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        new TabStatsCommand().register();
+        registerCommands(new TabStatsCommand());
+        Vigilance.initialize();
         config = new TabStatsConfig();
         config.preload();
         this.statWorld = new WorldLoader();
@@ -57,6 +59,10 @@ public class TabStats {
     /* used to register forge commands */
     private void registerCommands(ICommand... commands) {
         Arrays.stream(commands).forEachOrdered(ClientCommandHandler.instance::registerCommand);
+    }
+
+    public TabStatsConfig getConfig() {
+        return config;
     }
 
     public static TabStats getTabStats() { return tabStats; }
