@@ -17,7 +17,8 @@ public class TabStatsConfig extends Vigilant {
             category = "General"
     )
     private boolean textShadow = true;
-
+    
+    // property below isn't in use until the header and footer problem has been fixed.
     @Property(
             type = PropertyType.COLOR,
             name = "Background Color and Opacity of the Outer Tab",
