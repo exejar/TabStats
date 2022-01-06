@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 
 public class Multithreading {
 
-    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("WeatherChanger-%d").build());
+    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("TabStats-%d").build());
     private static final ScheduledExecutorService runnableExecutor = new ScheduledThreadPoolExecutor(8);
 
     public static void runAsync(Runnable runnable) {

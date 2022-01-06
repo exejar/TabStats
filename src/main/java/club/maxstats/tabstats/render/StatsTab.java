@@ -108,21 +108,27 @@ public class StatsTab extends GuiPlayerTabOverlay {
         drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
 
         /* draw an entry rect for the stat name title */
-        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, 553648127);
+        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB());
 
         /* Start with drawing the name and objective, as they will always be here and aren't inside of the Stat List */
         int statXSpacer = startingX + headSize + 2;
-        this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
-        this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
-
+        if (TabStats.getTabStats().getConfig().getTextShadow()) {
+            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+            this.mc.fontRendererObj.drawStringWithShadow(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+        } else {
+            this.mc.fontRendererObj.drawString(ChatColor.BOLD + "NAME", statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+            this.mc.fontRendererObj.drawString(objectiveName, startingX - (this.mc.fontRendererObj.getStringWidth(objectiveName) + 5), startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+        }
         /* adds longest name possible in pixels to statXSpacer since name's are way longer than stats */
         statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW") + 10;
 
         /* loops through all the stats that should be displayed and renders their stat titles */
         for (Stat stat : gameStatTitleList) {
             String statName = stat.getStatName();
-            this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
-
+            if (TabStats.getTabStats().getConfig().getTextShadow())
+                this.mc.fontRendererObj.drawStringWithShadow(ChatColor.BOLD + statName, statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+            else
+                this.mc.fontRendererObj.drawString(ChatColor.BOLD + statName, statXSpacer, startingY + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
             /* adds spacer for next stat */
             statXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + statName) + 10;
         }
@@ -132,7 +138,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         for (NetworkPlayerInfo playerInfo : playerList) {
             int xSpacer = startingX;
             /* entry background */
-            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, 553648127);
+            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB());
 
             /* ignore this, this is just preparing the gl canvas for rendering */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -192,13 +198,19 @@ public class StatsTab extends GuiPlayerTabOverlay {
                         }
 
                         // draws the stats
-                        this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+                        if (TabStats.getTabStats().getConfig().getTextShadow())
+                            this.mc.fontRendererObj.drawStringWithShadow(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
+                        else
+                            this.mc.fontRendererObj.drawString(statValue, valueXSpacer, ySpacer + (this.entryHeight / 2 - 4), ChatColor.WHITE.getRGB());
                         valueXSpacer += this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + stat.getStatName()) + 10;
                     }
                 }
 
                 // draws the players name
-                this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
+                if (TabStats.getTabStats().getConfig().getTextShadow())
+                    this.mc.fontRendererObj.drawStringWithShadow(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
+                else
+                    this.mc.fontRendererObj.drawString(name, xSpacer, ySpacer + (this.entryHeight / 2 - 4), -1);
             }
 
             if (scoreObjectiveIn != null & playerInfo.getGameType() != WorldSettings.GameType.SPECTATOR) {
@@ -278,15 +290,14 @@ public class StatsTab extends GuiPlayerTabOverlay {
                     if (endX - this.mc.fontRendererObj.getStringWidth(s + "hp") >= startX) {
                         s = s + "hp";
                     }
-
-                    this.mc.fontRendererObj.drawStringWithShadow(s, (float)((endX + startX) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float)y, i1);
+                        this.mc.fontRendererObj.drawStringWithShadow(s, (float)((endX + startX) / 2 - this.mc.fontRendererObj.getStringWidth(s) / 2), (float)y, i1);
                 }
             }
         } else {
             /* This is where Hypixel usually has Client draw Scoreboard Stats */
 
             String s1 = EnumChatFormatting.YELLOW + "" + i;
-            this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y + (this.entryHeight / 2 - 4), 16777215);
+                this.mc.fontRendererObj.drawStringWithShadow(s1, (float)(endX - this.mc.fontRendererObj.getStringWidth(s1)), (float)y + (this.entryHeight / 2 - 4), 16777215);
 //            drawRect(endX - this.mc.fontRendererObj.getStringWidth(objectiveIn.getDisplayName()), y, endX, y + this.entryHeight, 553648127);
         }
     }
