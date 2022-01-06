@@ -22,6 +22,14 @@ import java.util.Arrays;
 
 @Mod(modid = References.MODID, name = References.MODNAME, clientSideOnly = true, version = References.VERSION, acceptedMinecraftVersions = "1.8.9")
 public class TabStats {
+    
+    /* TODO: (- not done, o done)
+    - Add: Working background color picker.
+    - Fix: Header and footer issues.
+    - Add: Text shadow boolean.
+    - Add: Adjust with bossbar boolean.
+    */
+    
     private static TabStats tabStats;
     private WorldLoader statWorld;
     public static File modDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "MaxStats"), References.MODNAME);
