@@ -73,7 +73,7 @@ public class Bedwars extends BedwarsUtil {
 
     @Override
     public String getFormattedStats() {
-        return String.format("%s%s", getFkdrColor(getFkdr(this)), getFkdr(this));
+        return String.format("%s%s", getFKDRColor(getFKDR(this)), getFKDR(this));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Bedwars extends BedwarsUtil {
         this.formattedStatList.add(ws);
 
         StatString fkdr = new StatString("FKDR");
-        fkdr.setValue(this.getFkdrColor(this.getFkdr(this)).toString() + this.getFkdr(this));
+        fkdr.setValue(this.getFKDRColor(this.getFKDR(this)).toString() + this.getFKDR(this));
         this.formattedStatList.add(fkdr);
 
         StatString finals = new StatString("FINALS");
@@ -120,7 +120,7 @@ public class Bedwars extends BedwarsUtil {
         this.formattedStatList.add(finals);
 
         StatString wlr = new StatString("WLR");
-        wlr.setValue(this.getWlrColor(this.getWlr(this)).toString() + this.getWlr(this));
+        wlr.setValue(this.getWLRColor(this.getWLR(this)).toString() + this.getWLR(this));
         this.formattedStatList.add(wlr);
 
         StatString wins = new StatString("WINS");
@@ -128,7 +128,7 @@ public class Bedwars extends BedwarsUtil {
         this.formattedStatList.add(wins);
 
         StatString bblr = new StatString("BBLR");
-        bblr.setValue(this.getBblrColor(this.getBblr(this)).toString() + this.getBblr(this));
+        bblr.setValue(this.getBBLRColor(this.getBBLR(this)).toString() + this.getBBLR(this));
         this.formattedStatList.add(bblr);
     }
 }
