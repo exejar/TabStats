@@ -11,6 +11,14 @@ import java.io.File;
 public class TabStatsConfig extends Vigilant {
 
     @Property(
+            type = PropertyType.SWITCH,
+            name = "Toggle Text Shadow",
+            description = "When enabled text in tab will render with text shadow.",
+            category = "General"
+    )
+    private boolean textShadow = true;
+
+    @Property(
             type = PropertyType.COLOR,
             name = "Background Color and Opacity of the Outer Tab",
             description = "Adjust the background color and opacity of the outer tab layer",
@@ -26,6 +34,10 @@ public class TabStatsConfig extends Vigilant {
     )
     private Color innerTabbgColor = new Color(0,0,0,50);
 
+    public boolean getTextShadow() {
+        return textShadow;
+    }
+
     public Color getOuterTabBgColor() {
         return outerTabbgColor;
     }
@@ -33,7 +45,6 @@ public class TabStatsConfig extends Vigilant {
     public Color getInnerTabBgColor() {
         return innerTabbgColor;
     }
-
 
     public TabStatsConfig() {
         super(new File("./config", References.MODID + ".toml"), References.MODNAME);
