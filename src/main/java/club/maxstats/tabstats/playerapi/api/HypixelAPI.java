@@ -104,11 +104,11 @@ public class HypixelAPI {
                 JsonObject object = jsonParser.parse(new InputStreamReader(is, StandardCharsets.UTF_8)).getAsJsonObject();
                 uuid = object.get("id").getAsString();
             } catch (NullPointerException ex) {
-                System.out.println("Could not getUUID");
+                System.out.println("Could not get UUID");
                 ex.printStackTrace();
             }
         } catch (IOException ex) {
-            System.out.println("Could not getUUID");
+            System.out.println("Could not get UUID");
             ex.printStackTrace();
         }
 

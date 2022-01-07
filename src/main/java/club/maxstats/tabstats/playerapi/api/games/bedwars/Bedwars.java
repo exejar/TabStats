@@ -97,7 +97,7 @@ public class Bedwars extends BedwarsUtil {
 
 
         List<Stat> returnList = new ArrayList<>(this.formattedStatList);
-        StatString star = new StatString("Star");
+        StatString star = new StatString("STAR");
         star.setValue(this.getStarWithColor(((StatInt)this.star).getValue()));
         returnList.add(0, star);
         return returnList;
