@@ -24,9 +24,9 @@ import java.util.Arrays;
 public class TabStats {
     
     /* TODO: (- not done, o done)
-    - Add: Working background color picker.
+    o Add: Working background color picker.
     - Fix: Header and footer issues.
-    - Add: Text shadow boolean.
+    o Add: Text shadow boolean.
     - Add: Adjust with bossbar boolean.
     */
     

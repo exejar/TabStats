@@ -28,13 +28,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
-import org.lwjgl.input.Keyboard;
 
 import java.util.Comparator;
 import java.util.List;
@@ -46,6 +42,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private final GuiIngame guiIngame;
     private IChatComponent footer;
     private IChatComponent header;
+
     /** The amount of time since the playerlist was opened (went from not being rendered, to being rendered) */
     private long lastTimeOpened;
     /** Whether or not the playerlist is currently being rendered */
@@ -55,6 +52,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private final int entryHeight = 12;
     private final int backgroundBorderSize = 12;
     public static final int headSize = 12;
+
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
         super(mcIn, guiIngameIn);
@@ -103,10 +101,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* only grabs downwards of 80 players */
         playerList = playerList.subList(0, Math.min(playerList.size(), 80));
         int playerListSize = playerList.size();
-
         /* the entire tab background */
-        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, Integer.MIN_VALUE);
-
+        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, TabStats.getTabStats().getConfig().getOuterTabBgColor().getRGB());
         /* draw an entry rect for the stat name title */
         drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB());
 
@@ -187,13 +183,13 @@ public class StatsTab extends GuiPlayerTabOverlay {
                         /* finds the exact stat type so it can properly retrieve the stat value */
                         switch (stat.getType()) {
                             case INT:
-                                statValue = Integer.toString(((StatInt)stat).getValue());
+                                statValue = Integer.toString(((StatInt) stat).getValue());
                                 break;
                             case DOUBLE:
-                                statValue = Double.toString(((StatDouble)stat).getValue());
+                                statValue = Double.toString(((StatDouble) stat).getValue());
                                 break;
                             case STRING:
-                                statValue = ((StatString)stat).getValue();
+                                statValue = ((StatString) stat).getValue();
                                 break;
                         }
 
@@ -341,4 +337,18 @@ public class StatsTab extends GuiPlayerTabOverlay {
 
         return this.getPlayerName(playerInfo);
     }
+
+    public void setFooter(IChatComponent footerIn) {
+        this.footer = footerIn;
+    }
+
+    public void setHeader(IChatComponent headerIn) {
+        this.header = headerIn;
+    }
+
+    public void resetFooterHeader() {
+        this.header = null;
+        this.footer = null;
+    }
+
 }
