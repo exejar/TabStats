@@ -11,30 +11,52 @@ import java.io.File;
 public class TabStatsConfig extends Vigilant {
 
     @Property(
-            type = PropertyType.SWITCH,
-            name = "Toggle Text Shadow",
-            description = "When enabled text in tab will render with text shadow.",
+            type = PropertyType.SWITCH, name = "Entirely Toggle TabStats",
+            description = "Entirely toggles TabStats on and off.",
             category = "General"
     )
+    public static boolean toggleMod = true;
+
+    @Property(
+            type = PropertyType.SWITCH, name = "Toggle Text Shadow",
+            description = "When enabled text in tab will render with text shadow.",
+            category = "Customization"
+    )
     private boolean textShadow = true;
-    
-    // property below isn't in use until the header and footer problem has been fixed.
+/*
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Tab Scale",
+            description = "Use this slider to adjust the scale of tab. \n§eNumbers will round to the nearest even number.",
+            category = "Customization",
+            min = 0,
+            max = 20
+    )
+    private int scale = 12;
+*/
     @Property(
             type = PropertyType.COLOR,
-            name = "Background Color and Opacity of the Outer Tab",
-            description = "Adjust the background color and opacity of the outer tab layer",
-            category = "General"
+            name = "Outer Tab Color",
+            description = "Adjust the color and opacity of the outer tab.",
+            category = "Customization"
     )
     private Color outerTabbgColor = new Color(0,0,0,50);
 
     @Property(
             type = PropertyType.COLOR,
-            name = "Background Color and Opacity of the inner Tab",
-            description = "Adjust the background color and opacity of the inner tab layer",
-            category = "General"
+            name = "Inner Tab Color",
+            description = "Adjust the color and opacity of the inner tab. \n§eWhen opacity is set below the outer tabs, the value will be the same as that of the outer tab.",
+            category = "Customization"
     )
-    private Color innerTabbgColor = new Color(0,0,0,50);
-
+    private Color innerTabBgColor = new Color(0,0,0,50);
+/*
+    public int getScale() {
+        if (scale % 2 ==1)
+            return scale++;
+        else
+            return scale;
+    }
+*/
     public boolean getTextShadow() {
         return textShadow;
     }
@@ -44,10 +66,11 @@ public class TabStatsConfig extends Vigilant {
     }
 
     public Color getInnerTabBgColor() {
-        return innerTabbgColor;
+        return innerTabBgColor;
     }
 
     public TabStatsConfig() {
         super(new File("./config", References.MODID + ".toml"), References.MODNAME);
     }
+
 }
