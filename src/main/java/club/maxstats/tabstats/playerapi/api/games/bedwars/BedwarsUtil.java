@@ -11,14 +11,14 @@ public abstract class BedwarsUtil extends HGameBase {
         super(playerName, playerUUID);
     }
 
-    public double getFkdr(Bedwars bw) {
+    public double getFKDR(Bedwars bw) {
         return this.formatDouble(((StatInt)bw.finalKills).getValue(), ((StatInt)bw.finalDeaths).getValue());
     }
 
     //this is where I format all the stats and stat colors. You can modify this to your liking
     // Bedwars class is how I handle all the stats that are grabbed, you can also modify which stats are grabbed and add them to the stat list
 
-    public ChatColor getFkdrColor(double fkdr) {
+    public ChatColor getFKDRColor(double fkdr) {
         if (fkdr < 1.5) {
             return ChatColor.GRAY;
         } else if (fkdr < 3.5) {
@@ -38,11 +38,11 @@ public abstract class BedwarsUtil extends HGameBase {
         }
     }
 
-    public double getWlr(Bedwars bw) {
+    public double getWLR(Bedwars bw) {
         return this.formatDouble(((StatInt)bw.wins).getValue(), ((StatInt)bw.losses).getValue());
     }
 
-    public ChatColor getWlrColor(double wlr) {
+    public ChatColor getWLRColor(double wlr) {
         if (wlr < 1) {
             return ChatColor.GRAY;
         } else if (wlr < 2) {
@@ -62,11 +62,11 @@ public abstract class BedwarsUtil extends HGameBase {
         }
     }
 
-    public double getBblr(Bedwars bw) {
+    public double getBBLR(Bedwars bw) {
         return this.formatDouble(((StatInt)bw.bedsBroken).getValue(), ((StatInt)bw.bedsLost).getValue());
     }
 
-    public ChatColor getBblrColor(double bblr) {
+    public ChatColor getBBLRColor(double bblr) {
         if (bblr < 1.5) {
             return ChatColor.GRAY;
         } else if (bblr < 2.5) {

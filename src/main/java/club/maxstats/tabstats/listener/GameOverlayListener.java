@@ -46,7 +46,7 @@ public class GameOverlayListener {
                 }
 
                 /* the starting x amount before we start rendering stats, add to both sides */
-                int width = (StatsTab.headSize + 2) * 2 + this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW") + 10 - 10;
+                int width = (StatsTab.headSize + 2) * 2 + this.mc.fontRendererObj.getStringWidth(ChatColor.BOLD + "[YOUTUBE] WWWWWWWWWWWWWWWW");
 
                 /* kind of a really bad way of doing this, as we loop through this same stat list again inside of the renderNewPlayerlist method */
                 for (Stat stat : gameStatTitleList) {
