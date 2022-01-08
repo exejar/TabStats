@@ -40,8 +40,6 @@ public class StatsTab extends GuiPlayerTabOverlay {
     private static final Ordering<NetworkPlayerInfo> field_175252_a = Ordering.from(new StatsTab.PlayerComparator());
     private final Minecraft mc;
     private final GuiIngame guiIngame;
-    private IChatComponent footer;
-    private IChatComponent header;
 
     /** The amount of time since the playerlist was opened (went from not being rendered, to being rendered) */
     private long lastTimeOpened;
@@ -49,9 +47,9 @@ public class StatsTab extends GuiPlayerTabOverlay {
     public boolean tabBeingRendered;
     /* whether or not rank should come before color prefix */
     private boolean rankBeforePrefix = false;
-    private final int entryHeight = 12;
-    private final int backgroundBorderSize = 12;
-    public static final int headSize = 12;
+    private final int entryHeight = 10;
+    private final int backgroundBorderSize = 10;
+    public static final int headSize = 10;
 
 
     public StatsTab(Minecraft mcIn, GuiIngame guiIngameIn) {
@@ -71,7 +69,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         /* where the render should start on x plane */
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
-        int startingY = 35;
+        int startingY = 12;
 
         /* this is kind of useless...as nameWidth and objectiveWidth aren't used */
         for (NetworkPlayerInfo playerInfo : playerList) {
@@ -336,19 +334,6 @@ public class StatsTab extends GuiPlayerTabOverlay {
         }
 
         return this.getPlayerName(playerInfo);
-    }
-
-    public void setFooter(IChatComponent footerIn) {
-        this.footer = footerIn;
-    }
-
-    public void setHeader(IChatComponent headerIn) {
-        this.header = headerIn;
-    }
-
-    public void resetFooterHeader() {
-        this.header = null;
-        this.footer = null;
     }
 
 }

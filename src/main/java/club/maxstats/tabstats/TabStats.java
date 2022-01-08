@@ -27,7 +27,7 @@ public class TabStats {
     o Add: Working background color picker.
     - Fix: Header and footer issues.
     o Add: Text shadow boolean.
-    - Add: Adjust with bossbar boolean.
+    o Add: Adjust with bossbar boolean.
     */
     
     private static TabStats tabStats;
