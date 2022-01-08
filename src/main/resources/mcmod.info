@@ -5,7 +5,7 @@
     "description": "A 1.8.9 Hypixel forge mod made for stat checking directly into your tablist!",
     "version": "${version}",
     "mcversion": "1.8.9",
-    "url": "",
+    "url": "https://github.com/exejar/tabstats",
     "updateUrl": "",
     "authorList": [
       "exejar"

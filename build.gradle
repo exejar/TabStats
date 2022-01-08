@@ -20,7 +20,7 @@ minecraft {
     replace("@NAME@", projectName)
     replace("@VER@": projectVersion)
     replace("@ID@", projectId)
-    clientRunArgs += "--mixin mixins.${projectId}.json"
+    clientRunArgs += "--mixin mixins.tabstats.json"
 }
 
 configurations {
@@ -30,6 +30,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io/' }
     maven { url "https://repo.sk1er.club/repository/maven-public/" }
     maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
 }
@@ -52,29 +53,13 @@ processResources {
                 "mcversion": minecraft.version
         )
     }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
-
-jar {
-    manifest.attributes(
-            "ForceLoadAsMod": true,
-            "MixinConfigs": "mixins.${projectId}.json",
-            "ModSide": "CLIENT",
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker"
-    )
-
-    enabled = false
-}
-
-mixin {
-    disableRefMapWarning = true
-    defaultObfuscationEnv searge
-    add sourceSets.main, "mixins.${projectId}.refmap.json"
-}
-
 
 task moveResources {
     doLast {
-        /* We wrap this action in a try-catch because of potential failures while hotswapping. */
         try {
             ant.move(
                     file: "${buildDir}/resources/main",
@@ -86,6 +71,26 @@ task moveResources {
     }
 }
 
+moveResources.dependsOn processResources
+classes.dependsOn moveResources
+
+jar {
+    manifest.attributes(
+            "ForceLoadAsMod": true,
+            "MixinConfigs": "mixins.tabstats.json",
+            "ModSide": "CLIENT",
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+    )
+
+    enabled = false
+}
+
+mixin {
+    disableRefMapWarning = true
+    defaultObfuscationEnv searge
+    add sourceSets.main, "mixins.tabstats.refmap.json"
+}
+
 shadowJar {
     configurations = [project.configurations.shade]
     duplicatesStrategy DuplicatesStrategy.EXCLUDE
@@ -93,12 +98,20 @@ shadowJar {
     archiveClassifier.set("")
 }
 
-sourceSets {
-    main {
-        ext.refMap = "mixins.${projectId}.refmap.json"
+reobf {
+    shadowJar {
+        mappingType = "SEARGE"
     }
 }
 
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.tabstats.refmap.json"
+    }
+}
+
+tasks.reobfJar.dependsOn tasks.shadowJar
 moveResources.dependsOn(processResources)
 classes.dependsOn(moveResources)
 jar.finalizedBy(shadowJar)
