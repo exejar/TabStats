@@ -24,7 +24,7 @@ public class GameOverlayListener {
     @SubscribeEvent
     public void onOverlayRender(RenderGameOverlayEvent.Pre event) {
         /* checking if the event is rendering player list, if it is, cancel the current render and render the new overlay */
-        if (TabStats.getTabStats().getConfig().toggleMod) {
+        if (TabStats.getTabStats().getConfig().isModToggled()) {
             if (event.type == RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
                 event.setCanceled(true);
                 Scoreboard scoreboard = this.mc.thePlayer.getWorldScoreboard();

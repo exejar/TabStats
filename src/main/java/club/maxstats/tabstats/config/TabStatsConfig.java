@@ -11,29 +11,49 @@ import java.io.File;
 public class TabStatsConfig extends Vigilant {
 
     @Property(
-            type = PropertyType.SWITCH, name = "Entirely Toggle TabStats",
-            description = "Entirely toggles TabStats on and off.",
-            category = "General"
+            type = PropertyType.TEXT,
+            name = "API Key",
+            description = "Hypixel API key to be used when fetching stats",
+            category = "General",
+            protectedText = true
     )
-    public static boolean toggleMod = true;
+    private String apiKey;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Toggle Text Shadow",
-            description = "When enabled text in tab will render with text shadow.",
+            type = PropertyType.SWITCH, name = "TabStats Toggle",
+            description = "Enables or Disables TabStats",
+            category = "General"
+    )
+    private boolean toggleMod = true;
+
+    @Property(
+            type = PropertyType.SWITCH, name = "Text Shadow Toggle",
+            description = "When enabled, text in tab will render with text shadow.",
             category = "Customization"
     )
     private boolean textShadow = true;
-/*
+
     @Property(
             type = PropertyType.SLIDER,
             name = "Tab Scale",
             description = "Use this slider to adjust the scale of tab. \n§eNumbers will round to the nearest even number.",
             category = "Customization",
-            min = 0,
-            max = 20
+            min = 4,
+            max = 20,
+            increment = 4
     )
-    private int scale = 12;
-*/
+    private int tabScale = 12;
+
+    @Property(
+            type = PropertyType.SLIDER,
+            name = "Tab Opacity",
+            description = "Opacity Slider",
+            category = "Customization",
+            min = 0,
+            max = 255
+    )
+    private int tabOpacity = 50;
+
     @Property(
             type = PropertyType.COLOR,
             name = "Outer Tab Color",
@@ -57,9 +77,20 @@ public class TabStatsConfig extends Vigilant {
             return scale;
     }
 */
+
+    public String getApiKey() { return this.apiKey; }
+
+    public void setApiKey(String apiKey) { this.apiKey = apiKey; }
+
+    public boolean isModToggled() { return this.toggleMod; }
+
     public boolean getTextShadow() {
         return textShadow;
     }
+
+    public int getTabScale() { return this.tabScale; }
+
+    public int getTabOpacity() { return this.tabOpacity; }
 
     public Color getOuterTabBgColor() {
         return outerTabbgColor;
