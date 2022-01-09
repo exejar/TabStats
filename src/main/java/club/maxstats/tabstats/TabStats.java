@@ -32,8 +32,8 @@ public class TabStats {
     
     private static TabStats tabStats;
     private WorldLoader statWorld;
-    public static File modDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "MaxStats"), References.MODNAME);
-    public static TabStatsConfig config;
+    public static final File modDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "MaxStats"), References.MODNAME);
+    private TabStatsConfig config;
 
     /* Pre Initialization Event, Called before the initialization of Forge */
     @Mod.EventHandler
@@ -48,8 +48,8 @@ public class TabStats {
     public void init(FMLInitializationEvent event) {
         registerCommands(new TabStatsCommand());
         Vigilance.initialize();
-        config = new TabStatsConfig();
-        config.preload();
+        this.config = new TabStatsConfig();
+        this.config.preload();
         this.statWorld = new WorldLoader();
         this.registerListeners(statWorld, new GameOverlayListener(), new ApiKeyListener());
     }
@@ -70,12 +70,10 @@ public class TabStats {
     }
 
     public TabStatsConfig getConfig() {
-        return config;
+        return this.config;
     }
 
     public static TabStats getTabStats() { return tabStats; }
 
-    public WorldLoader getStatWorld() { return statWorld; }
+    public WorldLoader getStatWorld() { return this.statWorld; }
 }
-
-//
