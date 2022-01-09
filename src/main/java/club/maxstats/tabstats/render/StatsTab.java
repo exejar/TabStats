@@ -7,6 +7,7 @@ import club.maxstats.tabstats.playerapi.api.stats.StatDouble;
 import club.maxstats.tabstats.playerapi.api.stats.StatInt;
 import club.maxstats.tabstats.playerapi.api.stats.StatString;
 import club.maxstats.tabstats.util.ChatColor;
+import club.maxstats.tabstats.util.RGBA;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
@@ -31,6 +32,7 @@ import net.minecraft.world.WorldSettings;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.text.WordUtils;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Comparator;
 import java.util.List;
@@ -71,6 +73,13 @@ public class StatsTab extends GuiPlayerTabOverlay {
         int startingX = scaledRes.getScaledWidth() / 2 - width / 2;
         int startingY = 12;
 
+        final float tabScale = (float)TabStats.getTabStats().getConfig().getTabScale() / 4f;
+        final RGBA outerColor = RGBA.adjustOpacity(TabStats.getTabStats().getConfig().getOuterTabBgColor().getRGB(), TabStats.getTabStats().getConfig().getTabOpacity());
+        final RGBA innerColor = RGBA.adjustOpacity(TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB(), TabStats.getTabStats().getConfig().getTabOpacity());
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(tabScale, tabScale, tabScale);
+
         /* this is kind of useless...as nameWidth and objectiveWidth aren't used */
         for (NetworkPlayerInfo playerInfo : playerList) {
             int strWidth = this.mc.fontRendererObj.getStringWidth(this.getPlayerName(playerInfo));
@@ -99,10 +108,14 @@ public class StatsTab extends GuiPlayerTabOverlay {
         /* only grabs downwards of 80 players */
         playerList = playerList.subList(0, Math.min(playerList.size(), 80));
         int playerListSize = playerList.size();
+
+        /* TODO Translate to the scaled starting position so that the tab is placed in the same spot with every scaling factor */
+//        GlStateManager.translate();
+
         /* the entire tab background */
-        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, TabStats.getTabStats().getConfig().getOuterTabBgColor().getRGB());
+        drawRect(startingX - this.backgroundBorderSize - (objectiveName.isEmpty() ? 0 : 5 + this.mc.fontRendererObj.getStringWidth(objectiveName)), startingY - this.backgroundBorderSize, (scaledRes.getScaledWidth() / 2 + width / 2) + this.backgroundBorderSize,  (startingY + (playerListSize + 1) * (this.entryHeight + 1) - 1) + this.backgroundBorderSize, outerColor.toRGB());
         /* draw an entry rect for the stat name title */
-        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB());
+        drawRect(startingX, startingY, scaledRes.getScaledWidth() / 2 + width / 2, startingY + this.entryHeight, innerColor.toRGB());
 
         /* Start with drawing the name and objective, as they will always be here and aren't inside of the Stat List */
         int statXSpacer = startingX + headSize + 2;
@@ -132,7 +145,7 @@ public class StatsTab extends GuiPlayerTabOverlay {
         for (NetworkPlayerInfo playerInfo : playerList) {
             int xSpacer = startingX;
             /* entry background */
-            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, TabStats.getTabStats().getConfig().getInnerTabBgColor().getRGB());
+            drawRect(xSpacer, ySpacer, scaledRes.getScaledWidth() / 2 + width / 2, ySpacer + this.entryHeight, innerColor.toRGB());
 
             /* ignore this, this is just preparing the gl canvas for rendering */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -217,6 +230,8 @@ public class StatsTab extends GuiPlayerTabOverlay {
             /* spaces each entry by the specified pixels */
             ySpacer += this.entryHeight + 1;
         }
+
+        GlStateManager.popMatrix();
     }
 
     private void drawScoreboardValues(ScoreObjective objectiveIn, int y, String playerName, int startX, int endX, NetworkPlayerInfo playerInfo) {

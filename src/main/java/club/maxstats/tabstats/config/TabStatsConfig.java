@@ -17,7 +17,7 @@ public class TabStatsConfig extends Vigilant {
             category = "General",
             protectedText = true
     )
-    private String apiKey;
+    private String apiKey = "";
 
     @Property(
             type = PropertyType.SWITCH, name = "TabStats Toggle",
@@ -36,13 +36,12 @@ public class TabStatsConfig extends Vigilant {
     @Property(
             type = PropertyType.SLIDER,
             name = "Tab Scale",
-            description = "Use this slider to adjust the scale of tab. \n§eNumbers will round to the nearest even number.",
+            description = "(4 is 1x scale) Use this slider to adjust the scale of tab. \n§eNumbers will round to the nearest even number.",
             category = "Customization",
-            min = 4,
-            max = 20,
-            increment = 4
+            min = 1,
+            max = 12
     )
-    private int tabScale = 12;
+    private int tabScale = 4;
 
     @Property(
             type = PropertyType.SLIDER,
@@ -58,7 +57,8 @@ public class TabStatsConfig extends Vigilant {
             type = PropertyType.COLOR,
             name = "Outer Tab Color",
             description = "Adjust the color and opacity of the outer tab.",
-            category = "Customization"
+            category = "Customization",
+            allowAlpha = false
     )
     private Color outerTabbgColor = new Color(0,0,0,50);
 
@@ -66,17 +66,10 @@ public class TabStatsConfig extends Vigilant {
             type = PropertyType.COLOR,
             name = "Inner Tab Color",
             description = "Adjust the color and opacity of the inner tab. \n§eWhen opacity is set below the outer tabs, the value will be the same as that of the outer tab.",
-            category = "Customization"
+            category = "Customization",
+            allowAlpha = false
     )
     private Color innerTabBgColor = new Color(0,0,0,50);
-/*
-    public int getScale() {
-        if (scale % 2 ==1)
-            return scale++;
-        else
-            return scale;
-    }
-*/
 
     public String getApiKey() { return this.apiKey; }
 
@@ -103,5 +96,4 @@ public class TabStatsConfig extends Vigilant {
     public TabStatsConfig() {
         super(new File("./config", References.MODID + ".toml"), References.MODNAME);
     }
-
 }
