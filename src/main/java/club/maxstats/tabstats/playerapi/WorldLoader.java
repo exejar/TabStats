@@ -20,9 +20,9 @@ public class WorldLoader extends StatWorld {
     /* populates and checks the stat world player cache every tick */
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (mc.theWorld != null && mc.thePlayer != null) {
-            for (EntityPlayer entityPlayer : mc.theWorld.playerEntities) {
-                if (!existedMoreThan5Seconds.contains(entityPlayer.getUniqueID())) {
+        if (this.mc.theWorld != null && this.mc.thePlayer != null) {
+            for (EntityPlayer entityPlayer : this.mc.theWorld.playerEntities) {
+                if (!this.existedMoreThan5Seconds.contains(entityPlayer.getUniqueID())) {
                     if (!this.timeCheck.containsKey(entityPlayer.getUniqueID()))
                         this.timeCheck.put(entityPlayer.getUniqueID(), 0);
 
@@ -67,8 +67,9 @@ public class WorldLoader extends StatWorld {
         }
     }
 
-    public void onDelete() {
+    public void clearCache() {
         this.clearPlayers();
         this.existedMoreThan5Seconds.clear();
+        this.statAssembly.clear();
     }
 }
