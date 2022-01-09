@@ -2,7 +2,6 @@ package club.maxstats.tabstats;
 
 import club.maxstats.tabstats.command.TabStatsCommand;
 import club.maxstats.tabstats.config.TabStatsConfig;
-import club.maxstats.tabstats.config.ModConfig;
 import club.maxstats.tabstats.listener.ApiKeyListener;
 import club.maxstats.tabstats.listener.GameOverlayListener;
 import club.maxstats.tabstats.playerapi.WorldLoader;
@@ -40,7 +39,6 @@ public class TabStats {
     public void preInit(FMLPreInitializationEvent event) {
         if (!modDir.exists()) modDir.mkdir();
         tabStats = this;
-        ModConfig.getInstance().init();
     }
 
     /* Initialization Event, Called during the initialization of Forge */
@@ -51,7 +49,7 @@ public class TabStats {
         this.config = new TabStatsConfig();
         this.config.preload();
         this.statWorld = new WorldLoader();
-        this.registerListeners(statWorld, new GameOverlayListener(), new ApiKeyListener());
+        this.registerListeners(this.statWorld, new GameOverlayListener(), new ApiKeyListener());
     }
 
     /* Post Initialization Event, Called after the initialization of Forge */
