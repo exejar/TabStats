@@ -5,6 +5,7 @@ import club.maxstats.tabstats.playerapi.api.ILeveling;
 import club.maxstats.tabstats.playerapi.api.stats.Stat;
 import club.maxstats.tabstats.util.ChatColor;
 import club.maxstats.tabstats.util.Handler;
+import club.maxstats.tabstats.util.Multithreading;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -79,7 +80,7 @@ public abstract class HGameBase extends HypixelAPI {
     }
 
     protected void setStatsAsync(List<Stat> statList, Stat... stats) {
-        Handler.asExecutor(()-> {
+        Multithreading.runAsync(() -> {
             for (Stat stat : stats) {
                 stat.setStat();
                 statList.add(stat);

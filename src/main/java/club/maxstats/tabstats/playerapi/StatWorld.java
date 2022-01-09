@@ -8,6 +8,7 @@ import club.maxstats.tabstats.playerapi.exception.BadJsonException;
 import club.maxstats.tabstats.playerapi.exception.InvalidKeyException;
 import club.maxstats.tabstats.playerapi.exception.PlayerNullException;
 import club.maxstats.tabstats.util.Handler;
+import club.maxstats.tabstats.util.Multithreading;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -21,19 +22,19 @@ public class StatWorld {
     protected final Map<UUID, Integer> timeCheck = new HashMap<>();
 
     public StatWorld() {
-        worldPlayers = new ConcurrentHashMap<>();
+        this.worldPlayers = new ConcurrentHashMap<>();
     }
 
     public void removePlayer(UUID playerUUID) {
-        worldPlayers.remove(playerUUID);
+        this.worldPlayers.remove(playerUUID);
     }
 
     public void addPlayer(UUID playerUUID, HPlayer player) {
-        worldPlayers.put(playerUUID, player);
+        this.worldPlayers.put(playerUUID, player);
     }
 
     public void clearPlayers() {
-        worldPlayers.clear();
+        this.worldPlayers.clear();
     }
 
     public ConcurrentHashMap<UUID, HPlayer> getWorldPlayers() {
@@ -56,7 +57,7 @@ public class StatWorld {
     }
 
     public void fetchStats(EntityPlayer entityPlayer) {
-        Handler.asExecutor(()-> {
+        Multithreading.runAsync(() -> {
             UUID uuid = entityPlayer.getUniqueID();
             String playerName = entityPlayer.getName();
             String playerUUID = entityPlayer.getUniqueID().toString().replace("-", "");

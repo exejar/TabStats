@@ -12,16 +12,11 @@ import java.util.concurrent.Executors;
 
 public class Handler {
     public static final Locale LOCALE = getLocale();
-    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("InjectAgnet-%d").build());
     private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
     private static final GsonBuilder builder = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping();
 
     private static Locale getLocale() {
         return new Locale(System.getProperty("user.language"), System.getProperty("user.country"));
-    }
-
-    public static void asExecutor(Runnable runnable) {
-        executorService.submit(runnable);
     }
 
     public static Gson getGson() {
