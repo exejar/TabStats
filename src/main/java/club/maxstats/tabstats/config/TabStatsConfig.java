@@ -11,23 +11,23 @@ import java.io.File;
 public class TabStatsConfig extends Vigilant {
 
     @Property(
-            type = PropertyType.TEXT,
-            name = "API Key",
-            description = "Hypixel API key to be used when fetching stats",
-            category = "General",
-            protectedText = true
-    )
-    private String apiKey = "";
-
-    @Property(
-            type = PropertyType.SWITCH, name = "TabStats Toggle",
-            description = "Enables or Disables TabStats",
+            type = PropertyType.SWITCH, name = "TabStats",
+            description = "Enables and Disables TabStats.",
             category = "General"
     )
     private boolean toggleMod = true;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Text Shadow Toggle",
+            type = PropertyType.TEXT,
+            name = "API Key",
+            description = "Hypixel API key used to fetch stats.",
+            category = "General",
+            protectedText = true
+    )
+    private String apiKey = getApiKey();
+
+    @Property(
+            type = PropertyType.SWITCH, name = "Text Shadow",
             description = "When enabled, text in tab will render with text shadow.",
             category = "Customization"
     )
@@ -36,7 +36,7 @@ public class TabStatsConfig extends Vigilant {
     @Property(
             type = PropertyType.SLIDER,
             name = "Tab Scale",
-            description = "(4 is 1x scale) Use this slider to adjust the scale of tab. \n§eNumbers will round to the nearest even number.",
+            description = "Adjust the size of tab.",
             category = "Customization",
             min = 1,
             max = 12
@@ -46,7 +46,7 @@ public class TabStatsConfig extends Vigilant {
     @Property(
             type = PropertyType.SLIDER,
             name = "Tab Opacity",
-            description = "Opacity Slider",
+            description = "Adjust the opacity of the tab.",
             category = "Customization",
             min = 0,
             max = 255
@@ -56,7 +56,7 @@ public class TabStatsConfig extends Vigilant {
     @Property(
             type = PropertyType.COLOR,
             name = "Outer Tab Color",
-            description = "Adjust the color and opacity of the outer tab.",
+            description = "Adjust the color of the outer tab.",
             category = "Customization",
             allowAlpha = false
     )
@@ -65,7 +65,7 @@ public class TabStatsConfig extends Vigilant {
     @Property(
             type = PropertyType.COLOR,
             name = "Inner Tab Color",
-            description = "Adjust the color and opacity of the inner tab. \n§eWhen opacity is set below the outer tabs, the value will be the same as that of the outer tab.",
+            description = "Adjust the color of the inner tab.",
             category = "Customization",
             allowAlpha = false
     )
