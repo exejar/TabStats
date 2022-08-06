@@ -20,7 +20,6 @@ Join Our **Discord** for support: https://discord.gg/maxstats *(Backup https://m
 - Duels
 
 **Plans:**
-- Add a gui using **/tabstats** to provide customizability
 - Add an antisniper
 - Add autododge
 - Add Skywars, Blitz, and UHC support
